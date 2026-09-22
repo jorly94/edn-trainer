@@ -1,0 +1,3404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F6F4EF" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="EDN" />
+<title>EDN Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   EDN TRAINER — DESIGN SYSTEM
+   Mobile-first (base : iPhone 12, 390×844). Tout est piloté par les
+   tokens ci-dessous : aucune couleur en dur dans les composants.
+===================================================================== */
+
+:root {
+  /* — Couleurs — sauge/teal doux, crème, touche pêche — */
+  --bg:            #F6F4EF;
+  --bg-tint:       #EFF3F0;
+  --surface:       #FFFFFF;
+  --surface-alt:   #FBFAF7;
+
+  --ink:           #1E2A2B;
+  --ink-2:         #46585A;
+  --ink-3:         #7C8C8C;
+
+  --line:          #E5E2D9;
+  --line-strong:   #D3CFC3;
+
+  --brand:         #3E7E74;
+  --brand-600:     #336A61;
+  --brand-100:     #E2EFEB;
+  --brand-50:      #F0F7F4;
+
+  --accent:        #D97A4E;
+  --accent-600:    #C06A42;
+  --accent-100:    #FBEADF;
+
+  --good:          #3C8A6B;
+  --good-100:      #E4F1EA;
+  --warn:          #C08A3E;
+  --warn-100:      #F9EEDC;
+  --bad:           #C0605A;
+  --bad-100:       #F9E9E7;
+  --idle:          #9AA5A4;
+  --idle-100:      #EDEFEE;
+
+  /* — Typographie — */
+  --font:   "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* — Espacements — */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 20px; --s6: 24px; --s7: 32px; --s8: 44px;
+
+  /* — Rayons & ombres — */
+  --r-sm: 10px; --r: 16px; --r-lg: 22px; --r-full: 999px;
+  --shadow-1: 0 1px 2px rgba(30,42,43,.04), 0 1px 3px rgba(30,42,43,.05);
+  --shadow-2: 0 2px 6px rgba(30,42,43,.05), 0 8px 24px rgba(30,42,43,.06);
+
+  /* — Zones sûres iOS — */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+
+  --nav-h: 64px;
+}
+
+/* ------------------------------ Base ------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; max-width: 100%; overflow-x: hidden; }
+
+body {
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+img { max-width: 100%; height: auto; }
+a { color: var(--brand-600); text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.25; letter-spacing: -0.015em; }
+h1 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; }
+h2 { font-size: 1.05rem; font-weight: 700; }
+h3 { font-size: .95rem; font-weight: 700; }
+p  { margin: 0 0 var(--s3); }
+
+.subtitle { color: var(--ink-3); font-size: .92rem; margin: var(--s1) 0 var(--s5); }
+.small    { font-size: .84rem; color: var(--ink-3); line-height: 1.5; }
+.mt { margin-top: var(--s5); }
+.mb { margin-bottom: var(--s5); }
+.center { text-align: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
+.stack { display: grid; gap: var(--s3); }
+
+/* ----------------------------- Layout ----------------------------- */
+.shell { min-height: 100dvh; padding-bottom: calc(var(--nav-h) + var(--safe-b) + var(--s5)); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  padding: calc(var(--safe-t) + var(--s4)) var(--s4) var(--s3);
+  padding-left: calc(var(--s4) + var(--safe-l));
+  padding-right: calc(var(--s4) + var(--safe-r));
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid transparent;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+}
+.topbar.scrolled { border-bottom-color: var(--line); }
+.topbar .brand { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
+.topbar .brand span { color: var(--brand); }
+
+.main {
+  padding: var(--s4);
+  padding-left: calc(var(--s4) + var(--safe-l));
+  padding-right: calc(var(--s4) + var(--safe-r));
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Barre de navigation basse (mobile) */
+.bottomnav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex;
+  padding: var(--s2) calc(var(--s2) + var(--safe-r)) calc(var(--s2) + var(--safe-b)) calc(var(--s2) + var(--safe-l));
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-top: 1px solid var(--line);
+}
+.bottomnav a {
+  flex: 1 1 0; min-width: 0; min-height: 48px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  color: var(--ink-3); font-size: .68rem; font-weight: 600; letter-spacing: .01em;
+  border-radius: var(--r-sm); padding: var(--s1) 2px;
+  transition: color .15s ease, background .15s ease;
+}
+.bottomnav a svg { width: 21px; height: 21px; stroke-width: 1.7; }
+.bottomnav a.active { color: var(--brand); background: var(--brand-50); }
+.bottomnav a:active { transform: scale(.96); }
+.bottomnav a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.sidebar { display: none; }
+
+/* ------------------------------ Cards ----------------------------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: var(--s5);
+  box-shadow: var(--shadow-1);
+}
+.card + .card { margin-top: var(--s3); }
+.card-tight { padding: var(--s4); }
+
+.grid { display: grid; gap: var(--s3); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Statistique */
+.stat { padding: var(--s4); }
+.stat .label {
+  font-size: .74rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.stat .value {
+  font-family: var(--font-display); font-size: 1.75rem; font-weight: 600;
+  line-height: 1.1; margin-top: var(--s2); letter-spacing: -0.02em;
+}
+.stat .value small { font-size: .9rem; color: var(--ink-3); font-family: var(--font); font-weight: 600; }
+.stat.accent { background: var(--accent-100); border-color: transparent; }
+.stat.accent .value { color: var(--accent-600); }
+.stat.brand { background: var(--brand-100); border-color: transparent; }
+.stat.brand .value { color: var(--brand-600); }
+
+/* Bandeau d'accueil */
+.hero {
+  background: linear-gradient(160deg, var(--brand) 0%, var(--brand-600) 100%);
+  color: #fff; border-radius: var(--r-lg); padding: var(--s6) var(--s5);
+  display: flex; align-items: center; gap: var(--s5);
+}
+.hero h1 { color: #fff; font-size: 1.3rem; }
+.hero .hello { font-size: .85rem; opacity: .8; }
+.hero .meta { font-size: .85rem; opacity: .85; margin-top: var(--s2); }
+
+/* Anneau de progression */
+.ring { flex-shrink: 0; position: relative; width: 92px; height: 92px; }
+.ring svg { transform: rotate(-90deg); display: block; }
+.ring .ring-label {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 600;
+}
+
+/* Barre de progression */
+.bar { height: 8px; background: var(--idle-100); border-radius: var(--r-full); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--brand); border-radius: var(--r-full); transition: width .4s ease; }
+.bar.accent > i { background: var(--accent); }
+.bar.good > i { background: var(--good); }
+
+/* ----------------------------- Boutons ---------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: 48px; padding: 0 var(--s5);
+  border: 1px solid var(--line-strong); border-radius: var(--r-full);
+  background: var(--surface); color: var(--ink);
+  font-size: .95rem; font-weight: 600; cursor: pointer;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand-600); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+.btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: var(--shadow-1); }
+.btn-primary:hover { background: var(--brand-600); border-color: var(--brand-600); color: #fff; }
+.btn-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn-accent:hover { background: var(--accent-600); border-color: var(--accent-600); color: #fff; }
+.btn-good { background: var(--good); border-color: var(--good); color: #fff; }
+.btn-good:hover { background: var(--good); border-color: var(--good); color: #fff; filter: brightness(.95); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--ink-3); }
+.btn-danger { color: var(--bad); border-color: transparent; background: transparent; }
+
+.btn-block { width: 100%; }
+.btn-lg { min-height: 54px; font-size: 1rem; }
+.btn-sm { min-height: 38px; padding: 0 var(--s4); font-size: .84rem; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.btn-row .btn { flex: 1 1 auto; }
+
+/* ----------------------------- Badges ----------------------------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: var(--r-full);
+  font-size: .75rem; font-weight: 700; letter-spacing: .01em;
+}
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.badge-maitrisee   { background: var(--good-100); color: var(--good); }
+.badge-en_cours    { background: var(--brand-100); color: var(--brand-600); }
+.badge-fragile     { background: var(--warn-100); color: var(--warn); }
+.badge-a_apprendre { background: var(--bad-100); color: var(--bad); }
+.badge-idle        { background: var(--idle-100); color: var(--ink-3); }
+.badge-accent      { background: var(--accent-100); color: var(--accent-600); }
+
+/* --------------------------- Formulaires -------------------------- */
+label { display: block; font-size: .82rem; font-weight: 600; color: var(--ink-2); margin: var(--s4) 0 var(--s2); }
+input[type=text], input[type=email], input[type=password], input[type=number], textarea, select {
+  width: 100%; min-height: 48px; padding: var(--s3) var(--s4);
+  background: var(--surface-alt); border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm); font-size: 16px; /* 16px : évite le zoom auto iOS */
+  transition: border-color .15s ease, background .15s ease;
+}
+textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+input:focus, textarea:focus, select:focus { background: var(--surface); border-color: var(--brand); outline: none; }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%); background-position: calc(100% - 20px) 21px, calc(100% - 15px) 21px; background-size: 5px 5px; background-repeat: no-repeat; }
+.field { margin-bottom: var(--s2); }
+
+/* ------------------------ Écran de question ----------------------- */
+.question-shell { max-width: 720px; margin: 0 auto; }
+
+.q-progress { margin-bottom: var(--s5); }
+.q-progress .row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-size: .8rem; font-weight: 700; color: var(--ink-3);
+  letter-spacing: .04em; text-transform: uppercase; margin-bottom: var(--s2);
+}
+.q-progress .row b { font-family: var(--font-mono); color: var(--ink); font-size: .9rem; }
+
+.q-type {
+  display: inline-block; margin-bottom: var(--s4);
+  padding: 4px 10px; border-radius: var(--r-full);
+  background: var(--bg-tint); color: var(--brand-600);
+  font-size: .75rem; font-weight: 700;
+}
+.q-context {
+  background: var(--surface-alt); border-left: 3px solid var(--brand-100);
+  border-radius: var(--r-sm); padding: var(--s4);
+  font-size: .92rem; color: var(--ink-2); margin-bottom: var(--s4); white-space: pre-wrap;
+}
+.q-text { font-size: 1.12rem; line-height: 1.55; margin-bottom: var(--s5); white-space: pre-wrap; }
+
+/* Propositions */
+.option {
+  display: flex; align-items: flex-start; gap: var(--s3);
+  min-height: 56px; padding: var(--s4);
+  background: var(--surface); border: 1.5px solid var(--line);
+  border-radius: var(--r); margin-bottom: var(--s2);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: border-color .15s ease, background .15s ease, transform .1s ease;
+}
+.option:active { transform: scale(.995); }
+.option input { position: absolute; opacity: 0; pointer-events: none; }
+.option .key {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-tint); color: var(--ink-2);
+  font-size: .82rem; font-weight: 700;
+  transition: background .15s ease, color .15s ease;
+}
+.option .body { flex: 1; min-width: 0; font-size: .97rem; line-height: 1.5; }
+.option.selected { border-color: var(--brand); background: var(--brand-50); }
+.option.selected .key { background: var(--brand); color: #fff; }
+.option.correct { border-color: var(--good); background: var(--good-100); }
+.option.correct .key { background: var(--good); color: #fff; }
+.option.incorrect { border-color: var(--bad); background: var(--bad-100); }
+.option.incorrect .key { background: var(--bad); color: #fff; }
+.option.disabled { cursor: default; }
+.option.disabled:active { transform: none; }
+
+/* Correction */
+.verdict {
+  display: flex; align-items: center; gap: var(--s3);
+  padding: var(--s4) var(--s5); border-radius: var(--r);
+  font-weight: 700; font-size: 1rem; margin: var(--s5) 0 var(--s3);
+  animation: rise .25s ease both;
+}
+.verdict .mark {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: currentColor; font-size: .9rem;
+}
+.verdict .mark span { color: #fff; }
+.verdict.good { background: var(--good-100); color: var(--good); }
+.verdict.bad  { background: var(--bad-100);  color: var(--bad); }
+
+.explain {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r); padding: var(--s4) var(--s5); margin-bottom: var(--s3);
+  animation: rise .3s ease both;
+}
+.explain h4 {
+  margin: 0 0 var(--s2); font-size: .74rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3);
+}
+.explain p { margin: 0; font-size: .94rem; line-height: 1.6; color: var(--ink-2); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Barre d'action collante en bas d'écran */
+.actionbar {
+  position: sticky; bottom: 0; z-index: 10;
+  margin: var(--s5) calc(var(--s4) * -1) 0;
+  padding: var(--s3) var(--s4) calc(var(--s3) + var(--safe-b));
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  display: flex; gap: var(--s2);
+}
+.actionbar .btn { flex: 1 1 auto; }
+
+/* Illustrations extraites des PDF */
+.q-image {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--line); border-radius: var(--r);
+  margin: var(--s3) 0; background: #fff; cursor: zoom-in;
+}
+.image-zoom {
+  position: fixed; inset: 0; z-index: 100; padding: var(--s4);
+  background: rgba(20, 30, 31, .94);
+  display: flex; align-items: center; justify-content: center;
+}
+.image-zoom img { max-width: 100%; max-height: 100%; border-radius: var(--r-sm); }
+
+/* ----------------------- Import & vérification -------------------- */
+.dropzone {
+  border: 1.5px dashed var(--line-strong); border-radius: var(--r);
+  background: var(--surface-alt); padding: var(--s7) var(--s4);
+  text-align: center; color: var(--ink-3); cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.dropzone:hover, .dropzone.over { border-color: var(--brand); background: var(--brand-50); color: var(--brand-600); }
+.dropzone strong { display: block; color: var(--ink); font-size: 1rem; margin-bottom: var(--s1); }
+
+.stepper { display: flex; gap: var(--s2); margin-bottom: var(--s5); }
+.stepper .step { flex: 1; text-align: center; font-size: .7rem; font-weight: 700; color: var(--ink-3); }
+.stepper .step i {
+  display: block; height: 4px; border-radius: var(--r-full);
+  background: var(--idle-100); margin-bottom: var(--s2);
+}
+.stepper .step.done i { background: var(--brand); }
+.stepper .step.done { color: var(--brand-600); }
+.stepper .step.current i { background: var(--accent); }
+.stepper .step.current { color: var(--accent-600); }
+
+.filelist .row {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding: var(--s3) 0; border-bottom: 1px solid var(--line); font-size: .9rem;
+}
+.filelist .row:last-child { border-bottom: none; }
+
+.review-row { border: 1px solid var(--line); border-radius: var(--r); padding: var(--s4); margin-bottom: var(--s3); background: var(--surface); }
+.review-row.needs-review { border-color: var(--warn); background: var(--warn-100); }
+.review-row .row-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-bottom: var(--s2); }
+
+/* --------------------- États vides & chargement ------------------- */
+.empty { text-align: center; padding: var(--s7) var(--s4); }
+.empty .icon {
+  width: 56px; height: 56px; margin: 0 auto var(--s4);
+  border-radius: var(--r); background: var(--brand-50);
+  display: flex; align-items: center; justify-content: center; color: var(--brand);
+}
+.empty h2 { margin-bottom: var(--s2); }
+.empty p { color: var(--ink-3); font-size: .92rem; max-width: 34ch; margin: 0 auto var(--s5); }
+
+.skeleton { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s5); margin-bottom: var(--s3); }
+.sk-line { height: 12px; border-radius: var(--r-full); margin-bottom: var(--s3);
+  background: linear-gradient(90deg, var(--idle-100) 25%, #F5F7F6 37%, var(--idle-100) 63%);
+  background-size: 400% 100%; animation: shimmer 1.3s ease infinite; }
+.sk-line:last-child { margin-bottom: 0; }
+.sk-line.w40 { width: 40%; } .sk-line.w60 { width: 60%; } .sk-line.w80 { width: 80%; }
+@keyframes shimmer { from { background-position: 100% 50%; } to { background-position: 0 50%; } }
+
+/* --------------------------- Auth / config ------------------------ */
+.center-screen {
+  min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--s5) + var(--safe-t)) var(--s4) calc(var(--s5) + var(--safe-b));
+}
+.auth-card { width: 100%; max-width: 400px; padding: var(--s6); }
+.auth-card h1 { margin-bottom: var(--s1); }
+
+/* Graphique en barres (statistiques par thème) */
+.hbar { margin-bottom: var(--s4); }
+.hbar:last-child { margin-bottom: 0; }
+.hbar .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); margin-bottom: var(--s2); font-size: .9rem; }
+.hbar .top b { font-family: var(--font-mono); font-size: .85rem; }
+.hbar .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s4); font-size: .8rem; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* ============================ RESPONSIVE ========================== */
+
+/* Petits écrans (iPhone SE, 375px) */
+@media (max-width: 380px) {
+  .stat .value { font-size: 1.5rem; }
+  .hero { flex-direction: column; align-items: flex-start; gap: var(--s4); }
+  .btn { padding: 0 var(--s4); }
+}
+
+/* Tablette */
+@media (min-width: 640px) {
+  .grid-2 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .main { padding: var(--s6); }
+  h1 { font-size: 1.75rem; }
+}
+
+/* Desktop : barre latérale, plus de navigation basse */
+@media (min-width: 900px) {
+  .shell { display: flex; padding-bottom: 0; }
+  .bottomnav { display: none; }
+  .sidebar {
+    display: flex; flex-direction: column; gap: 2px;
+    width: 232px; flex-shrink: 0; min-height: 100dvh;
+    padding: var(--s6) var(--s4);
+    background: var(--surface); border-right: 1px solid var(--line);
+    position: sticky; top: 0; align-self: flex-start;
+  }
+  .sidebar .brand { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; padding: 0 var(--s3) var(--s5); }
+  .sidebar .brand span { color: var(--brand); }
+  .sidebar a {
+    display: flex; align-items: center; gap: var(--s3);
+    padding: var(--s3) var(--s3); border-radius: var(--r-sm);
+    color: var(--ink-2); font-size: .92rem; font-weight: 600;
+  }
+  .sidebar a svg { width: 19px; height: 19px; stroke-width: 1.7; }
+  .sidebar a:hover { background: var(--bg-tint); color: var(--ink); }
+  .sidebar a.active { background: var(--brand-50); color: var(--brand-600); }
+  .topbar { display: none; }
+  .main { flex: 1; padding: var(--s7); max-width: 940px; }
+  .actionbar { position: static; margin: var(--s6) 0 0; padding: 0; background: none; border: none; backdrop-filter: none; }
+  .actionbar .btn { flex: 0 1 auto; min-width: 180px; }
+}
+
+/* Mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"><p style="padding:40px;font-family:sans-serif;">Chargement…</p></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.2/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+</script>
+
+<script>
+// =====================================================================
+// BOOTSTRAP — connexion à la base.
+// La configuration est intégrée ci-dessous : plus rien à saisir.
+// La clé "publishable" (ex "anon") est publique par conception ; ce sont
+// les politiques RLS de schema.sql qui protègent réellement les données.
+// L'écran de saisie ne sert plus que de secours (autre projet Supabase).
+// =====================================================================
+window.EDN_DEFAULT_CONFIG = {
+  url: "https://dkjexwkdaxjjroucklzi.supabase.co",
+  key: "sb_publishable_fEb2__TiQ6Sr_yrZy5XvCQ_HV2pO5L9"
+};
+
+window.EDN_BOOT = function () {
+  let cfg = null;
+  try { cfg = JSON.parse(localStorage.getItem('edn_supabase_config') || 'null'); } catch (e) { cfg = null; }
+  if (!cfg || !cfg.url || !cfg.key) cfg = window.EDN_DEFAULT_CONFIG;
+
+  if (cfg && cfg.url && cfg.key) {
+    window.sb = window.supabase.createClient(cfg.url, cfg.key, {
+      auth: {
+        persistSession: true,        // la session survit à la fermeture de l'onglet
+        autoRefreshToken: true,
+        storageKey: 'edn-auth'
+      }
+    });
+    return true;
+  }
+
+  // Secours : aucune configuration disponible
+  document.getElementById('app').innerHTML = `
+    <div class="center-screen">
+      <div class="card auth-card">
+        <h1>Connexion à votre base</h1>
+        <p class="subtitle">Collez les deux valeurs de votre projet Supabase (Project Settings &gt; API).</p>
+        <div class="field"><label for="cfg-url">Project URL</label>
+          <input type="text" id="cfg-url" placeholder="https://xxxx.supabase.co" /></div>
+        <div class="field"><label for="cfg-key">Clé publishable / anon</label>
+          <input type="text" id="cfg-key" placeholder="sb_publishable_…" /></div>
+        <div id="cfg-error" class="small" style="color:var(--bad);margin-top:12px;" role="alert"></div>
+        <button class="btn btn-primary btn-lg btn-block mt" id="cfg-save">Enregistrer</button>
+      </div>
+    </div>`;
+  document.getElementById('cfg-save').onclick = () => {
+    const url = document.getElementById('cfg-url').value.trim();
+    const key = document.getElementById('cfg-key').value.trim();
+    if (!url.startsWith('https://') || key.length < 20) {
+      document.getElementById('cfg-error').textContent = 'URL ou clé invalide.';
+      return;
+    }
+    try { localStorage.setItem('edn_supabase_config', JSON.stringify({ url, key })); } catch (e) {}
+    location.reload();
+  };
+  return false;
+};
+
+</script>
+
+<script>
+// =====================================================================
+// PARSERS — extraction locale, sans aucune IA ni API payante.
+// Chaque parseur retourne un tableau d'objets "ParsedQuestion" :
+// {
+//   question_number, question_text, question_type,
+//   options: [{key:'A', text:'...', is_correct:bool}, ...],
+//   official_correction, explanation, theme,
+//   needs_review: bool, review_reason: string
+// }
+// Règle d'or : ne jamais inventer. Si une donnée est incertaine,
+// needs_review = true et le champ manquant reste vide.
+// =====================================================================
+
+const EDNParsers = (() => {
+
+  const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+  // PostgreSQL refuse les caractères nuls et les séquences Unicode invalides.
+  // Les polices CID de certains PDF en produisent lorsqu'un glyphe n'a pas
+  // d'équivalent Unicode : on les retire dès l'extraction.
+  function sanitize(str) {
+    return String(str == null ? '' : str)
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+      .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/g, '')
+      .replace(/(^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '$1');
+  }
+
+  function emptyQuestion(num) {
+    return {
+      question_number: num ?? null,
+      question_text: '',
+      question_type: 'qcm',
+      options: [],
+      student_initial_answer: '',
+      official_correction: '',
+      explanation: '',
+      theme: '',
+      needs_review: false,
+      review_reason: ''
+    };
+  }
+
+  function flagReview(q, reason) {
+    q.needs_review = true;
+    q.review_reason = q.review_reason ? q.review_reason + ' ; ' + reason : reason;
+    return q;
+  }
+
+  // =============================================================
+  // 1. CSV / XLSX — gabarit de colonnes
+  // =============================================================
+  const COLUMN_ALIASES = {
+    numero: ['numero', 'numéro', 'num', 'n', 'question_number'],
+    question: ['question', 'enonce', 'énoncé', 'question_text'],
+    type: ['type', 'question_type'],
+    theme: ['theme', 'thème', 'item'],
+    reponse_correcte: ['reponse_correcte', 'réponse correcte', 'reponses_correctes',
+      'bonne_reponse', 'bonnes_reponses', 'correct_answer', 'correct_answers'],
+    reponse_etudiant: ['reponse_etudiant', 'réponse étudiant', 'ma_reponse', 'student_answer'],
+    correction: ['correction', 'official_correction'],
+    explication: ['explication', 'explanation']
+  };
+
+  function normalizeHeader(h) {
+    return String(h || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function matchColumn(headers, aliases) {
+    const normalized = headers.map(normalizeHeader);
+    for (const alias of aliases) {
+      const idx = normalized.indexOf(normalizeHeader(alias));
+      if (idx !== -1) return headers[idx];
+    }
+    return null;
+  }
+
+  function rowsToQuestions(rows) {
+    if (!rows.length) return [];
+    const headers = Object.keys(rows[0]);
+    const col = {};
+    for (const key in COLUMN_ALIASES) col[key] = matchColumn(headers, COLUMN_ALIASES[key]);
+
+    const optionCols = {};
+    LETTERS.forEach(L => {
+      optionCols[L] = matchColumn(headers, [`option_${L.toLowerCase()}`, `proposition_${L.toLowerCase()}`, `option ${L.toLowerCase()}`]);
+    });
+
+    return rows.map((row, i) => {
+      const q = emptyQuestion(col.numero ? row[col.numero] : i + 1);
+      q.question_text = col.question ? String(row[col.question] ?? '').trim() : '';
+      if (!q.question_text) flagReview(q, 'énoncé manquant');
+      if (col.type) q.question_type = String(row[col.type] || 'qcm').trim().toLowerCase();
+      if (col.theme) q.theme = String(row[col.theme] || '').trim();
+      if (col.reponse_etudiant) q.student_initial_answer = String(row[col.reponse_etudiant] || '').trim();
+      if (col.correction) q.official_correction = String(row[col.correction] || '').trim();
+      if (col.explication) q.explanation = String(row[col.explication] || '').trim();
+
+      const correctRaw = col.reponse_correcte ? String(row[col.reponse_correcte] || '').toUpperCase() : '';
+      const correctLetters = correctRaw.split(/[,;\/\s]+/).filter(Boolean);
+      if (!correctLetters.length) flagReview(q, 'bonne réponse non identifiée');
+
+      let hasAnyOption = false;
+      LETTERS.forEach(L => {
+        const c = optionCols[L];
+        if (c && row[c] !== undefined && String(row[c]).trim() !== '') {
+          hasAnyOption = true;
+          q.options.push({ key: L, text: String(row[c]).trim(), is_correct: correctLetters.includes(L) });
+        }
+      });
+      if (!hasAnyOption) flagReview(q, 'aucune proposition détectée');
+      if (q.options.length > 1) q.question_type = correctLetters.length > 1 ? 'qrm' : 'qru';
+      return q;
+    });
+  }
+
+  async function parseCSV(file) {
+    return new Promise((resolve, reject) => {
+      Papa.parse(file, {
+        header: true, skipEmptyLines: true,
+        complete: (res) => resolve(rowsToQuestions(res.data)),
+        error: reject
+      });
+    });
+  }
+
+  async function parseXLSX(file) {
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+    return rowsToQuestions(rows);
+  }
+
+  // =============================================================
+  // 2. FORMAT "CORRIGÉ EDN" (export type EDNp / UNESS)
+  //    Reconnu par : "Element d'épreuve:" et "Question N: (Type: XXX)"
+  //    Statuts : Valide / Indispensable = bonne réponse
+  //              Faux / Inacceptable    = mauvaise réponse
+  // =============================================================
+  const SINGLE_TYPES = ['QRU', 'QTCS'];
+  const OPEN_TYPES = ['QROC'];
+
+  function looksLikeEDNCorrige(text) {
+    return /Question\s+\d+\s*:\s*\(\s*Type\s*:/i.test(text) &&
+           /(Element d'épreuve|Valide|Faux)/i.test(text);
+  }
+
+  function stripFooters(raw) {
+    let t = raw.replace(/\r/g, '');
+    t = t.replace(/Référence\s*:\s*[^\n]*/gi, '\n');
+    t = t.replace(/Date de création\s*:?/gi, '\n');
+    t = t.replace(/\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2}/g, '\n');
+    t = t.replace(/Version\s*:\s*\d+\s*/gi, '\n');
+    t = t.replace(/Page\s*:\s*\d+\s*\/\s*\d+/gi, '\n');
+    return t;
+  }
+
+  const RE_SECTION = /^Element d'épreuve\s*:\s*(\S+)/i;
+  const RE_QSTART = /^Question\s+(\d+)\s*:\s*\(\s*Type\s*:\s*([A-Za-z]+)\s*\)\s*(.*)$/i;
+  const RE_OPT_FULL = /^[☐◎□○●■\s]*(Valide|Faux|Indispensable|Inacceptable)\s+([A-J])\s*[.)]\s*(.*)$/i;
+  const RE_OPT_STATUS = /^[☐◎□○●■\s]*(Valide|Faux|Indispensable|Inacceptable)\s*$/i;
+  const RE_OPT_LETTER = /^([A-J])\s*[.)]\s*(.*)$/;
+  const RE_ANSWERS_HEADER = /^R[ée]ponses?\s+valides?\s*:/i;
+  const RE_ZONE_ALL = /Zone\s*(\d+)\s*:\s*(Valide|Faux)\s*(?:\d+(?:[.,]\d+)?)?/gi;
+  const RE_ZONE_HEADER = /^(Marqueurs|Statut|Pondération)(\s|$)/i;
+  const RE_ANSWER_ITEM = /^[•\-\*\s]*(.+?)\s*\(\s*(\d+(?:[.,]\d+)?)\s*\)\s*$/;
+  const RE_FOOTER_LINE = /^(Référence\s*:|Date de création|Version\s*:|Page\s*:|Epreuve\s*:|\d{4}-\d{2}-\d{2}-\d{2}:\d{2}:\d{2})/i;
+  const RE_NOISE = /^([☐◎□○●■]|\(|\)|ème|eme|ère|ere|er|re|e|\d{1,2}|Marqueurs|Statut|Pondération|Zone \d+\s*:\s*\w+)$/i;
+
+  function isCorrectStatus(s) {
+    const v = s.toLowerCase();
+    return v === 'valide' || v === 'indispensable';
+  }
+
+  function parseEDNCorrige(rawText) {
+    const lines = stripFooters(rawText).split('\n').map(l => l.trim()).filter(l => l.length);
+
+    const questions = [];
+    let section = '';
+    let sectionIntro = [];
+    let cur = null;
+    let mode = 'intro';
+    let pendingStatus = null;
+    let inComment = false;
+
+    function finalizeQuestion(c) {
+      const q = c.q;
+      q.question_text = c.enonce.join(' ').replace(/\s+/g, ' ').trim();
+      if (c.intro && c.intro.length) {
+        q.question_text = '[Contexte ' + c.section + '] ' +
+          c.intro.join(' ').replace(/\s+/g, ' ').trim() + '\n\n' + q.question_text;
+      }
+      q.explanation = c.explanation.join(' ').replace(/\s+/g, ' ').trim();
+      q.options.forEach(o => { o.text = o.text.replace(/\s+/g, ' ').trim(); });
+      q.options = q.options.filter(o => o.text.length);
+
+      const type = c.rawType.toUpperCase();
+      if (OPEN_TYPES.includes(type)) {
+        q.question_type = 'qroc';
+        q.options = c.answers.map((a, i) => ({ key: 'R' + (i + 1), text: a, is_correct: true }));
+        if (!q.options.length) flagReview(q, 'aucune réponse attendue trouvée');
+      } else if (SINGLE_TYPES.includes(type)) {
+        q.question_type = 'qru';
+      } else if (type === 'QZONE') {
+        q.question_type = 'qzone';
+        if (c.zones && c.zones.length) {
+          q.official_correction = 'Zones attendues sur l\'image — ' +
+            c.zones.map(z => 'Zone ' + z.num + (z.label ? ' : ' + z.label : '')).join(' ; ');
+        }
+      } else {
+        q.question_type = 'qrm';
+      }
+
+      if (!q.question_text) flagReview(q, 'énoncé non identifié');
+      if (q.question_type === 'qru' || q.question_type === 'qrm') {
+        if (!q.options.length) flagReview(q, 'aucune proposition détectée');
+        else if (!q.options.some(o => o.is_correct)) flagReview(q, 'aucune bonne réponse identifiée');
+      }
+      // Une question n'est signalée que si une IMAGE est réellement affichée
+      // dans le document (PDF.js n'extrait que le texte).
+      const IMG_WORD = '\\b(radiographies?|scanner|IRM|[ée]chographie|frottis|photographies?|clich[ée]s?|images?|iconographie|TDM)\\b';
+      const IMG_CUE = '\\b(suivante?s?|ci-joint|ci-dessous|ci-contre|r[ée]alis[ée]|voici)\\b';
+      const displayed =
+        new RegExp(IMG_WORD + '[^.]{0,80}' + IMG_CUE, 'i').test(q.question_text) ||
+        new RegExp(IMG_CUE + '[^.]{0,40}' + IMG_WORD, 'i').test(q.question_text) ||
+        /\b(cette|ce)\s+(anomalie|image|l[ée]sion|clich[ée]|photographie)\b/i.test(q.question_text) ||
+        q.options.some(o => /proposition illustrée par une image/i.test(o.text));
+      if (q.question_type !== 'qzone' && displayed) {
+        flagReview(q, 'une image accompagne cette question : vérifiez qu\'elle reste compréhensible sans');
+      }
+      q.theme = c.section || '';
+    }
+
+    function pushCurrent() {
+      if (!cur) return;
+      finalizeQuestion(cur);
+      questions.push(cur.q);
+      cur = null;
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      if (line === '(') { inComment = true; continue; }
+      if (line === ')') { inComment = false; continue; }
+      if (inComment) { if (cur) cur.explanation.push(line); continue; }
+
+      const mSec = line.match(RE_SECTION);
+      if (mSec) {
+        pushCurrent();
+        section = mSec[1];
+        sectionIntro = [];
+        mode = 'intro';
+        continue;
+      }
+
+      const mQ = line.match(RE_QSTART);
+      if (mQ) {
+        pushCurrent();
+        const q = emptyQuestion(questions.length + 1);
+        cur = {
+          q, rawType: mQ[2], section,
+          // le contexte de section (vignette de dossier, article de LCA,
+          // situation de TCS) est rappelé au-dessus de chaque question
+          intro: sectionIntro.slice(),
+          enonce: [], explanation: [], answers: [], zones: [],
+          inZoneTable: false, pendingZoneLabel: ''
+        };
+        const tail = (mQ[3] || '').trim();
+        if (tail && !/^(0\/1|Non corrigé|\d+([.,]\d+)?\/\d+)$/i.test(tail)) cur.enonce.push(tail);
+        mode = 'enonce';
+        pendingStatus = null;
+        continue;
+      }
+
+      if (RE_ANSWERS_HEADER.test(line)) { mode = 'answers'; continue; }
+
+      if (!cur) {
+        if (mode === 'intro' && !RE_NOISE.test(line)) sectionIntro.push(line);
+        continue;
+      }
+
+      const mOpt = line.match(RE_OPT_FULL);
+      if (mOpt) {
+        cur.q.options.push({ key: mOpt[2].toUpperCase(), text: mOpt[3] || '', is_correct: isCorrectStatus(mOpt[1]) });
+        mode = 'options';
+        pendingStatus = null;
+        continue;
+      }
+
+      const mStatus = line.match(RE_OPT_STATUS);
+      if (mStatus) { pendingStatus = mStatus[1]; continue; }
+      if (pendingStatus) {
+        const mLetter = line.match(RE_OPT_LETTER);
+        if (mLetter) {
+          cur.q.options.push({
+            key: mLetter[1].toUpperCase(),
+            text: (mLetter[2] || '(proposition illustrée par une image)').trim(),
+            is_correct: isCorrectStatus(pendingStatus)
+          });
+          mode = 'options';
+          pendingStatus = null;
+          continue;
+        }
+        pendingStatus = null;
+      }
+
+      if (mode === 'answers') {
+        const mAns = line.match(RE_ANSWER_ITEM);
+        if (mAns) {
+          if (parseFloat(mAns[2].replace(',', '.')) > 0) cur.answers.push(mAns[1].trim());
+          continue;
+        }
+        mode = 'explanation';
+        cur.explanation.push(line);
+        continue;
+      }
+
+      // question à zones : le tableau de marqueurs décrit les bonnes réponses.
+      // Le libellé de la zone est imprimé juste avant (ou après) sa ligne "Zone N".
+      if (RE_ZONE_HEADER.test(line)) { cur.inZoneTable = true; continue; }
+      // une même ligne peut contenir plusieurs zones, chacune suivie de son
+      // libellé : "Zone 2: Valide 1 lésion osteo chondrale ◎ Zone 1: Valide 1 …"
+      RE_ZONE_ALL.lastIndex = 0;
+      const zoneMatches = [];
+      let mz;
+      while ((mz = RE_ZONE_ALL.exec(line)) !== null) {
+        zoneMatches.push({ num: mz[1], status: mz[2], start: mz.index, end: mz.index + mz[0].length });
+      }
+      if (zoneMatches.length) {
+        cur.inZoneTable = true;
+        zoneMatches.forEach((z, zi) => {
+          if (!/valide/i.test(z.status)) return;
+          const stop = zi + 1 < zoneMatches.length ? zoneMatches[zi + 1].start : line.length;
+          const inline = line.slice(z.end, stop).replace(/[☐◎□○●■]/g, '').trim();
+          cur.zones.push({ num: z.num, label: inline || cur.pendingZoneLabel || '' });
+        });
+        cur.pendingZoneLabel = '';
+        continue;
+      }
+      // dans le tableau de zones, une ligne sans "Zone N" est le libellé
+      // de la zone précédente (ou de la suivante si celle-ci n'existe pas encore)
+      if (cur.inZoneTable) {
+        const last = cur.zones[cur.zones.length - 1];
+        if (last && !last.label) last.label = line;
+        else cur.pendingZoneLabel = line;
+        continue;
+      }
+
+      if (RE_NOISE.test(line)) continue;
+
+      if (mode === 'enonce') {
+        cur.enonce.push(line);
+      } else if (mode === 'options') {
+        const startsLower = /^[a-zà-ÿ(«"'\d+\-]/.test(line);
+        if (startsLower && cur.q.options.length) {
+          cur.q.options[cur.q.options.length - 1].text += ' ' + line;
+        } else {
+          mode = 'explanation';
+          cur.explanation.push(line);
+        }
+      } else {
+        cur.explanation.push(line);
+      }
+    }
+    pushCurrent();
+    return questions;
+  }
+
+  // =============================================================
+  // 3. Extraction générique (documents hors format EDN)
+  // =============================================================
+  function heuristicParseText(rawText) {
+    const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const blocks = [];
+    let current = null;
+    const qStart = /^(?:Question\s*)?(\d{1,4})[.)]\s*(.*)$/i;
+
+    for (const line of lines) {
+      const m = line.match(qStart);
+      if (m && (!current || Number(m[1]) !== current.question_number)) {
+        if (current) blocks.push(current);
+        current = { question_number: Number(m[1]), lines: [m[2]] };
+      } else if (current) current.lines.push(line);
+    }
+    if (current) blocks.push(current);
+
+    const optionLine = /^([A-F])[.)]\s*(.*)$/;
+    const correctionLine = /^(réponses?\s*correctes?|corrig[ée]|correction|bonnes?\(?s?\)?\s*réponses?)\s*[:\-]?\s*(.*)$/i;
+    const explanationLine = /^(explication|commentaire|rappel)\s*[:\-]?\s*(.*)$/i;
+
+    return blocks.map(b => {
+      const q = emptyQuestion(b.question_number);
+      const bodyLines = [];
+      let mode = 'body';
+      let correctLetters = [];
+      for (const line of b.lines) {
+        const optM = line.match(optionLine), corrM = line.match(correctionLine), explM = line.match(explanationLine);
+        if (optM) { q.options.push({ key: optM[1].toUpperCase(), text: optM[2].trim(), is_correct: false }); mode = 'options'; }
+        else if (corrM) {
+          q.official_correction = (q.official_correction + ' ' + corrM[2]).trim();
+          const l = corrM[2].toUpperCase().match(/[A-F]/g); if (l) correctLetters.push(...l);
+          mode = 'correction';
+        } else if (explM) { q.explanation = (q.explanation + ' ' + explM[2]).trim(); mode = 'explanation'; }
+        else if (mode === 'body') bodyLines.push(line);
+        else if (mode === 'options' && q.options.length) q.options[q.options.length - 1].text += ' ' + line;
+        else if (mode === 'correction') {
+          q.official_correction += ' ' + line;
+          const l = line.toUpperCase().match(/[A-F]/g); if (l) correctLetters.push(...l);
+        } else q.explanation += ' ' + line;
+      }
+      q.question_text = bodyLines.join(' ').trim();
+      correctLetters = [...new Set(correctLetters)];
+      q.options.forEach(o => { if (correctLetters.includes(o.key)) o.is_correct = true; });
+      q.question_type = correctLetters.length > 1 ? 'qrm' : 'qru';
+      if (!q.question_text) flagReview(q, 'énoncé non identifié avec certitude');
+      if (!q.options.length) flagReview(q, 'aucune proposition détectée');
+      if (!correctLetters.length) flagReview(q, 'bonne réponse non identifiée');
+      return q;
+    });
+  }
+
+  function parseText(text) {
+    if (looksLikeEDNCorrige(text)) {
+      const qs = parseEDNCorrige(text)
+        // on écarte les blocs totalement vides (artefacts de mise en page)
+        .filter(q => (q.question_text && q.question_text.trim().length > 3) ||
+                     q.options.length || (q.explanation && q.explanation.length > 3));
+      if (qs.length) return qs;
+    }
+    return heuristicParseText(text);
+  }
+
+  // =============================================================
+  // 4. DOCX / PDF
+  // =============================================================
+  async function parseDOCX(file) {
+    const buf = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer: buf });
+    const questions = parseText(result.value);
+    if (!questions.length) {
+      return [flagReview(emptyQuestion(1), 'aucune structure de question détectée — saisie manuelle nécessaire')];
+    }
+    return questions;
+  }
+
+  // PDF.js ne fournit pas les sauts de ligne : on reconstruit les lignes
+  // à partir de la position verticale de chaque fragment de texte.
+  function itemsToLines(items) {
+    // 1. on ne garde que les fragments porteurs de texte
+    const frags = [];
+    for (const it of items) {
+      if (!it.str || !it.str.length) continue;
+      const x = it.transform[4];
+      const y = it.transform[5];
+      const h = Math.abs(it.height || it.transform[3] || 10) || 10;
+      const w = it.width != null ? it.width : (it.str.length * h * 0.5);
+      if (!it.str.trim()) continue;
+      frags.push({ x, y, h, w, s: it.str });
+    }
+    if (!frags.length) return [];
+
+    // 2. regroupement en lignes par proximité verticale (tolérance liée à la taille de police)
+    frags.sort((a, b) => (b.y - a.y) || (a.x - b.x));
+    const lines = [];
+    let current = null;
+    for (const f of frags) {
+      const tol = Math.max(2, f.h * 0.5);
+      if (current && Math.abs(current.y - f.y) <= tol) {
+        current.items.push(f);
+        current.y = (current.y * (current.items.length - 1) + f.y) / current.items.length;
+      } else {
+        if (current) lines.push(current);
+        current = { y: f.y, items: [f] };
+      }
+    }
+    if (current) lines.push(current);
+
+    // 3. assemblage : PDF.js ne fournit pas toujours les espaces, on les
+    //    restitue à partir de l'écart horizontal entre deux fragments.
+    return lines.map(line => {
+      line.items.sort((a, b) => a.x - b.x);
+      let text = '';
+      let prevEnd = null;
+      for (const f of line.items) {
+        if (prevEnd !== null) {
+          const gap = f.x - prevEnd;
+          const needsSpace = gap > f.h * 0.18;
+          const alreadySpaced = /\s$/.test(text) || /^\s/.test(f.s);
+          if (needsSpace && !alreadySpaced) text += ' ';
+        }
+        text += f.s;
+        prevEnd = f.x + f.w;
+      }
+      return { y: line.y, text: sanitize(text).replace(/\s+/g, ' ').trim() };
+    }).filter(l => l.text.length);
+  }
+
+  // --- Extraction des images réellement intégrées dans le PDF -------------
+  // On suit la matrice de transformation courante (CTM) dans la liste
+  // d'opérateurs pour connaître la position exacte de chaque image.
+  function multiply(m, ctm) {
+    return [
+      m[0] * ctm[0] + m[1] * ctm[2],
+      m[0] * ctm[1] + m[1] * ctm[3],
+      m[2] * ctm[0] + m[3] * ctm[2],
+      m[2] * ctm[1] + m[3] * ctm[3],
+      m[4] * ctm[0] + m[5] * ctm[2] + ctm[4],
+      m[4] * ctm[1] + m[5] * ctm[3] + ctm[5]
+    ];
+  }
+
+  function applyMatrix(m, x, y) {
+    return [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+  }
+
+  async function findPageImages(page) {
+    const OPS = pdfjsLib.OPS;
+    const IMAGE_OPS = new Set([
+      OPS.paintImageXObject, OPS.paintJpegXObject,
+      OPS.paintImageMaskXObject, OPS.paintInlineImageXObject
+    ].filter(v => v !== undefined));
+
+    let opList;
+    try { opList = await page.getOperatorList(); } catch (e) { return []; }
+
+    let ctm = [1, 0, 0, 1, 0, 0];
+    const stack = [];
+    const found = [];
+
+    for (let i = 0; i < opList.fnArray.length; i++) {
+      const fn = opList.fnArray[i];
+      const args = opList.argsArray[i];
+      if (fn === OPS.save) stack.push(ctm.slice());
+      else if (fn === OPS.restore) ctm = stack.pop() || [1, 0, 0, 1, 0, 0];
+      else if (fn === OPS.transform) ctm = multiply(args, ctm);
+      else if (IMAGE_OPS.has(fn)) {
+        // l'image occupe le carré unité transformé par la CTM
+        const corners = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([x, y]) => applyMatrix(ctm, x, y));
+        const xs = corners.map(c => c[0]), ys = corners.map(c => c[1]);
+        const box = {
+          x0: Math.min(...xs), x1: Math.max(...xs),
+          y0: Math.min(...ys), y1: Math.max(...ys)
+        };
+        // on ignore les décorations minuscules (puces, filets…)
+        if (box.x1 - box.x0 > 60 && box.y1 - box.y0 > 60) found.push(box);
+      }
+    }
+    return found;
+  }
+
+  // Rend la page puis découpe chaque image, en JPEG compressé.
+  async function cropImages(page, boxes) {
+    const RENDER_SCALE = 2;
+    const MAX_WIDTH = 900;
+    const viewport = page.getViewport({ scale: RENDER_SCALE });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const out = [];
+    for (const box of boxes) {
+      const p1 = viewport.convertToViewportPoint(box.x0, box.y1);
+      const p2 = viewport.convertToViewportPoint(box.x1, box.y0);
+      const pad = 4;
+      const sx = Math.max(0, Math.min(p1[0], p2[0]) - pad);
+      const sy = Math.max(0, Math.min(p1[1], p2[1]) - pad);
+      const sw = Math.min(canvas.width - sx, Math.abs(p2[0] - p1[0]) + pad * 2);
+      const sh = Math.min(canvas.height - sy, Math.abs(p2[1] - p1[1]) + pad * 2);
+      if (sw < 40 || sh < 40) continue;
+
+      const ratio = Math.min(1, MAX_WIDTH / sw);
+      const crop = document.createElement('canvas');
+      crop.width = Math.round(sw * ratio);
+      crop.height = Math.round(sh * ratio);
+      const cctx = crop.getContext('2d');
+      cctx.fillStyle = '#ffffff';
+      cctx.fillRect(0, 0, crop.width, crop.height);
+      cctx.drawImage(canvas, sx, sy, sw, sh, 0, 0, crop.width, crop.height);
+      out.push({ box, src: crop.toDataURL('image/jpeg', 0.72) });
+    }
+    canvas.width = canvas.height = 0; // libère la mémoire
+    return out;
+  }
+
+  async function parseDOCX(file) {
+    const buf = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer: buf });
+    const questions = parseText(result.value);
+    if (!questions.length) {
+      return [flagReview(emptyQuestion(1), 'aucune structure de question détectée — saisie manuelle nécessaire')];
+    }
+    return questions;
+  }
+
+  async function parsePDF(file, onProgress) {
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+
+    const allLines = [];
+    const pageData = [];   // { pageNum, lines, imageBoxes }
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const lines = itemsToLines(content.items);
+      const imageBoxes = await findPageImages(page);
+      pageData.push({ pageNum: i, lines, imageBoxes });
+      allLines.push(...lines.map(l => l.text));
+      if (onProgress) onProgress(i, pdf.numPages, 'Lecture du texte');
+    }
+
+    const fullText = allLines.join('\n');
+    if (!fullText.replace(/\s/g, '').length) {
+      return [flagReview(emptyQuestion(1),
+        'PDF scanné ou sans texte extractible : aucune extraction automatique fiable possible. ' +
+        'Saisie manuelle requise, ou convertissez le fichier en PDF texte / DOCX / CSV avant import.')];
+    }
+
+    const questions = parseText(fullText);
+    if (!questions.length) {
+      return [flagReview(emptyQuestion(1), 'aucune structure de question détectée — saisie manuelle nécessaire')];
+    }
+
+    // --- rattachement des images à leur question ---------------------------
+    // Une image peut être placée APRÈS la question à laquelle elle se rapporte
+    // (illustration d'énoncé ou de proposition) ou AVANT (vignette d'un nouveau
+    // dossier imprimée en haut de page). On lève l'ambiguïté en regardant ce
+    // qui suit immédiatement l'image dans le flux du document.
+    const totalImages = pageData.reduce((n, p) => n + p.imageBoxes.length, 0);
+    if (totalImages) {
+      const RE_TABLE_MARK = /^(Marqueurs|Statut|Pondération|Zone\s*\d+\s*:)/i;
+
+      // 1. flux linéaire complet du document
+      const stream = [];
+      pageData.forEach((pd, pi) => {
+        const els = [
+          ...pd.lines.map(l => ({ kind: 'line', y: l.y, text: l.text, page: pi })),
+          ...pd.imageBoxes.map(b => ({ kind: 'image', y: b.y1, box: b, page: pi }))
+        ].sort((a, b) => b.y - a.y);
+        stream.push(...els);
+      });
+
+      // 2. attribution
+      const assignments = [];   // { page, box, qIndex, label }
+      let qIndex = -1, lastOptionKey = null, pendingStatus = false;
+
+      for (let i = 0; i < stream.length; i++) {
+        const el = stream[i];
+        if (el.kind === 'line') {
+          if (RE_QSTART.test(el.text)) { qIndex++; lastOptionKey = null; pendingStatus = false; continue; }
+          const mo = el.text.match(RE_OPT_FULL);
+          if (mo) { lastOptionKey = mo[2].toUpperCase(); pendingStatus = false; continue; }
+          if (RE_OPT_STATUS.test(el.text)) { pendingStatus = true; continue; }
+          if (pendingStatus) {
+            const ml = el.text.match(RE_OPT_LETTER);
+            if (ml) lastOptionKey = ml[1].toUpperCase();
+            pendingStatus = false;
+          }
+          continue;
+        }
+
+        // lecture anticipée : à quoi se rattache cette image ?
+        // Elle introduit la question SUIVANTE seulement si un énoncé
+        // s'intercale entre elle et l'en-tête de cette question (vignette de
+        // dossier imprimée en haut de page). Si l'en-tête suit immédiatement,
+        // l'image illustre encore la question courante (dernière proposition).
+        let target = qIndex, label = lastOptionKey;
+        let bodyBetween = 0;
+        for (let j = i + 1; j < stream.length; j++) {
+          const nx = stream[j];
+          if (nx.kind !== 'line') continue;
+          if (RE_QSTART.test(nx.text)) {
+            if (bodyBetween > 0) { target = qIndex + 1; label = null; }
+            break;
+          }
+          if (RE_OPT_FULL.test(nx.text) || RE_OPT_STATUS.test(nx.text) ||
+              RE_ANSWERS_HEADER.test(nx.text) || RE_TABLE_MARK.test(nx.text)) {
+            break; // l'image appartient bien à la question en cours
+          }
+          // texte d'énoncé intercalé (on ignore pieds de page et intitulés de section)
+          if (!RE_FOOTER_LINE.test(nx.text) && !RE_SECTION.test(nx.text) &&
+              !RE_NOISE.test(nx.text) && nx.text.length >= 20) bodyBetween++;
+        }
+        if (target >= 0 && questions[target]) {
+          assignments.push({ page: el.page, box: el.box, qIndex: target, label });
+        }
+      }
+
+      // 3. rendu et découpe, page par page
+      let done = 0;
+      const byPage = new Map();
+      assignments.forEach(a => {
+        if (!byPage.has(a.page)) byPage.set(a.page, []);
+        byPage.get(a.page).push(a);
+      });
+
+      for (const [pageIdx, list] of byPage) {
+        const page = await pdf.getPage(pageData[pageIdx].pageNum);
+        const crops = await cropImages(page, list.map(a => a.box));
+        crops.forEach((c, k) => {
+          const target = questions[list[k].qIndex];
+          if (!target) return;
+          target.images = target.images || [];
+          target.images.push({ src: c.src, label: list[k].label });
+        });
+        done += list.length;
+        if (onProgress) onProgress(done, totalImages, 'Extraction des images');
+      }
+
+      // une question dont l'image a été récupérée n'est plus signalée pour ce motif
+      questions.forEach(q => {
+        if (q.images && q.images.length && q.review_reason) {
+          q.review_reason = q.review_reason.split(' ; ')
+            .filter(r => !/une image accompagne/i.test(r)).join(' ; ');
+          if (!q.review_reason) q.needs_review = false;
+        }
+      });
+    }
+
+    return questions;
+  }
+
+  async function parseFile(file, onProgress) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'csv') return parseCSV(file);
+    if (ext === 'xlsx' || ext === 'xls') return parseXLSX(file);
+    if (ext === 'docx') return parseDOCX(file);
+    if (ext === 'pdf') return parsePDF(file, onProgress);
+    throw new Error('Format non supporté : .' + ext);
+  }
+
+  return { parseFile, parseText, parseEDNCorrige, heuristicParseText, looksLikeEDNCorrige, sanitize };
+})();
+
+
+
+</script>
+
+<script>
+// =====================================================================
+// ENGINE — moteur de révision par erreurs, cycles, et statut de maîtrise.
+// Algorithme (voir README section "Moteur de révision") :
+//
+//  Nouveau cycle N          -> toutes les questions sont éligibles
+//  Réponse correcte         -> retirée de la liste d'erreurs du cycle N
+//  Réponse incorrecte       -> ajoutée à la liste d'erreurs du cycle N
+//  Fin de session, erreurs>0 -> prochaine session = uniquement ces erreurs
+//  Fin de session, erreurs=0 -> cycle N terminé, cycle N+1 disponible
+//
+// Une question redevenue incorrecte après avoir été correcte réintègre
+// IMMÉDIATEMENT la liste d'erreurs du cycle en cours.
+// =====================================================================
+
+const EDNEngine = (() => {
+
+  // Récupère, pour un examen et un cycle donnés, la dernière tentative
+  // de chaque question au sein de CE cycle.
+  async function getLatestAttemptsForCycle(userId, examId, cycleNumber) {
+    const { data, error } = await sb
+      .from('attempts')
+      .select('question_id, is_correct, answered_at')
+      .eq('user_id', userId)
+      .eq('exam_id', examId)
+      .eq('cycle_number', cycleNumber)
+      .order('answered_at', { ascending: true });
+    if (error) throw error;
+
+    const latest = new Map();
+    for (const row of data) latest.set(row.question_id, row.is_correct); // le dernier écrase les précédents (ordre asc)
+    return latest;
+  }
+
+  // Liste des questions éligibles à la PROCHAINE session pour un cycle :
+  // jamais répondues dans ce cycle, ou dont la dernière réponse est fausse.
+  async function getEligibleQuestions(userId, examId, cycleNumber) {
+    const { data: allQuestions, error } = await sb
+      .from('questions')
+      .select('id')
+      .eq('exam_id', examId)
+      .eq('user_id', userId);
+    if (error) throw error;
+
+    const latest = await getLatestAttemptsForCycle(userId, examId, cycleNumber);
+    return allQuestions
+      .filter(q => !latest.has(q.id) || latest.get(q.id) === false)
+      .map(q => q.id);
+  }
+
+  // Nombre d'erreurs actuelles du cycle en cours (pour affichage dashboard / "Mes erreurs")
+  async function countCurrentErrors(userId, examId, cycleNumber) {
+    const ids = await getEligibleQuestions(userId, examId, cycleNumber);
+    // "Mes erreurs" doit refléter les questions déjà tentées au moins une fois
+    // et actuellement fausses (pas les questions jamais vues du tout).
+    const latest = await getLatestAttemptsForCycle(userId, examId, cycleNumber);
+    return ids.filter(id => latest.has(id)).length;
+  }
+
+  function buildQuestionSet(allIds, scope, latestMap, masteryMap, count) {
+    let pool = allIds;
+    if (scope === 'errors') {
+      pool = allIds.filter(id => latestMap.has(id) && latestMap.get(id) === false);
+    } else if (scope === 'fragile') {
+      pool = allIds.filter(id => (masteryMap.get(id) || {}).status === 'fragile');
+    } else if (scope === 'nonmastered') {
+      pool = allIds.filter(id => (masteryMap.get(id) || {}).status !== 'maitrisee');
+    }
+    if (count && count !== 'all' && Number(count) < pool.length) {
+      pool = pool.slice(0, Number(count));
+    }
+    return pool;
+  }
+
+  // Statut de maîtrise — règle stricte.
+  // Une question est MAÎTRISÉE uniquement si la dernière réponse donnée était
+  // exacte à 100 % : toutes les bonnes propositions cochées ET aucune mauvaise.
+  // (C'est déjà ce que vérifie la correction avant d'enregistrer la tentative :
+  //  `is_correct` n'est vrai que sur une correspondance exacte.)
+  // consecutive_correct repasse à 0 dès qu'une réponse est fausse : il vaut donc
+  // > 0 si et seulement si la dernière tentative était intégralement juste.
+  //   maitrisee   : dernière réponse 100 % correcte
+  //   fragile     : déjà réussie par le passé, mais dernière réponse fausse
+  //   a_apprendre : jamais réussie
+  function computeStatus(m) {
+    if (!m || m.total_attempts === 0) return 'a_apprendre';
+    if (m.consecutive_correct > 0) return 'maitrisee';
+    return m.total_correct > 0 ? 'fragile' : 'a_apprendre';
+  }
+
+  // Deux seules catégories pour les compteurs de l'accueil :
+  // maîtrisée (dernière réponse exacte) ou à revoir (tout le reste, une fois tentée).
+  const isMastered = (m) => !!m && m.total_attempts > 0 && m.consecutive_correct > 0;
+  const isToReview = (m) => !!m && m.total_attempts > 0 && m.consecutive_correct === 0;
+
+  // Enregistre une tentative + met à jour mastery. Retourne le nouveau statut.
+  async function recordAttempt({ userId, examId, questionId, sessionId, cycleNumber, selectedAnswers, isCorrect, responseTime }) {
+    const { error: attErr } = await sb.from('attempts').insert({
+      user_id: userId, exam_id: examId, question_id: questionId, session_id: sessionId,
+      cycle_number: cycleNumber, selected_answers: selectedAnswers, is_correct: isCorrect,
+      response_time: responseTime || null
+    });
+    if (attErr) throw attErr;
+
+    const { data: existing } = await sb.from('mastery')
+      .select('*').eq('user_id', userId).eq('question_id', questionId).maybeSingle();
+
+    const base = existing || {
+      user_id: userId, question_id: questionId, exam_id: examId,
+      consecutive_correct: 0, total_attempts: 0, total_correct: 0, total_incorrect: 0,
+      cycles_correct_count: 0
+    };
+    base.total_attempts += 1;
+    if (isCorrect) { base.total_correct += 1; base.consecutive_correct += 1; }
+    else { base.total_incorrect += 1; base.consecutive_correct = 0; }
+    base.last_attempt_at = new Date().toISOString();
+    base.status = computeStatus(base);
+    if (base.status === 'maitrisee' && !base.mastered_at) base.mastered_at = new Date().toISOString();
+    if (base.status !== 'maitrisee') base.mastered_at = null;
+
+    const { error: mErr } = await sb.from('mastery').upsert(base, { onConflict: 'user_id,question_id' });
+    if (mErr) throw mErr;
+    return base.status;
+  }
+
+  async function getMasteryMap(userId, examId) {
+    const { data, error } = await sb.from('mastery').select('*').eq('user_id', userId).eq('exam_id', examId);
+    if (error) throw error;
+    const map = new Map();
+    data.forEach(m => map.set(m.question_id, m));
+    return map;
+  }
+
+  return {
+    getLatestAttemptsForCycle, getEligibleQuestions, countCurrentErrors,
+    buildQuestionSet, computeStatus, recordAttempt, getMasteryMap,
+    isMastered, isToReview
+  };
+})();
+
+</script>
+
+<script>
+// =====================================================================
+// APP — routeur hash + vues. Aucun framework, aucun build.
+// =====================================================================
+const App = (() => {
+  const APP_VERSION = '2026.09.22-diag';
+  let CURRENT_USER = null;
+  const $app = () => document.getElementById('app');
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // --- Icônes (SVG inline, aucune dépendance) ---------------------------
+  const ICONS = {
+    home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+    books: '<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="16" rx="1"/><path d="M17.5 5.3 21 18.2"/>',
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/>',
+    chart: '<path d="M4 19V10"/><path d="M10 19V5"/><path d="M16 19v-6"/><path d="M21 19H3"/>',
+    plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+    logout: '<path d="M14 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 16l-4-4 4-4"/><path d="M6 12h9"/>',
+    inbox: '<path d="M4 13h4l2 3h4l2-3h4"/><path d="M5 5h14l2 8v6H3v-6z"/>'
+  };
+  const icon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+
+  const NAV_LINKS = [
+    { href: '#/dashboard', label: 'Accueil',  icon: 'home' },
+    { href: '#/exams',     label: 'Mes EDN',  icon: 'books' },
+    { href: '#/revise',    label: 'Réviser',  icon: 'target' },
+    { href: '#/stats',     label: 'Stats',    icon: 'chart' },
+    { href: '#/import',    label: 'Importer', icon: 'plus' }
+  ];
+
+  const isActive = (href) => {
+    const h = location.hash || '#/dashboard';
+    if (href === '#/dashboard') return h.startsWith('#/dashboard');
+    if (href === '#/exams') return h.startsWith('#/exams') || /^#\/exam\/[^/]+\/(train|exam-mode)/.test(h);
+    if (href === '#/revise') return h.startsWith('#/revise') || /mistakes/.test(h);
+    if (href === '#/stats') return h.startsWith('#/stats') || /\/stats/.test(h);
+    return h.startsWith(href);
+  };
+
+  function sidebarHtml() {
+    return `<nav class="sidebar" aria-label="Navigation principale">
+      <div class="brand">EDN<span>·</span>Trainer</div>
+      ${NAV_LINKS.map(l => `<a href="${l.href}" class="${isActive(l.href) ? 'active' : ''}">
+        ${icon(l.icon)}<span>${l.label}</span></a>`).join('')}
+      <a href="#" id="logout-link" style="margin-top:auto;color:var(--ink-3)">${icon('logout')}<span>Se déconnecter</span></a>
+      <div class="small" style="padding:8px 12px;">Version ${APP_VERSION}</div>
+    </nav>`;
+  }
+
+  function bottomNavHtml() {
+    return `<nav class="bottomnav" aria-label="Navigation principale">
+      ${NAV_LINKS.map(l => `<a href="${l.href}" class="${isActive(l.href) ? 'active' : ''}"
+        aria-current="${isActive(l.href) ? 'page' : 'false'}">
+        ${icon(l.icon)}<span>${l.label}</span></a>`).join('')}
+    </nav>`;
+  }
+
+  // Zoom plein écran au clic sur une illustration
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.classList && e.target.classList.contains('q-image')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'image-zoom';
+      overlay.innerHTML = `<img src="${e.target.src}" alt="Illustration agrandie" />`;
+      overlay.onclick = () => overlay.remove();
+      document.body.appendChild(overlay);
+    }
+  });
+
+  // innerHtml = contenu de la page. topTitle = titre affiché dans la barre
+  // supérieure sur mobile (la barre latérale prend le relais sur desktop).
+  function shell(innerHtml, topTitle) {
+    $app().innerHTML = `
+      <div class="shell">
+        ${sidebarHtml()}
+        <div style="flex:1;min-width:0;">
+          <header class="topbar">
+            <div class="brand">${topTitle ? esc(topTitle) : 'EDN<span>·</span>Trainer'}</div>
+            <button class="btn btn-ghost btn-sm" id="logout-link-m" aria-label="Se déconnecter">${icon('logout')}</button>
+          </header>
+          <main class="main">${innerHtml}</main>
+        </div>
+      </div>
+      ${bottomNavHtml()}`;
+
+    const logout = async (e) => { e.preventDefault(); await sb.auth.signOut(); route(); };
+    const lo = document.getElementById('logout-link');
+    if (lo) lo.onclick = logout;
+    const lom = document.getElementById('logout-link-m');
+    if (lom) lom.onclick = logout;
+
+    // ombre de la barre supérieure au défilement
+    const bar = document.querySelector('.topbar');
+    if (bar) {
+      const onScroll = () => bar.classList.toggle('scrolled', window.scrollY > 4);
+      window.removeEventListener('scroll', window.__ednScroll || (() => {}));
+      window.__ednScroll = onScroll;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  }
+
+  // Squelette de chargement (jamais d'écran vide)
+  function skeleton(rows = 3) {
+    return Array.from({ length: rows }, () => `
+      <div class="skeleton"><div class="sk-line w40"></div><div class="sk-line w80"></div><div class="sk-line w60"></div></div>`).join('');
+  }
+
+  // Anneau de progression en SVG
+  function ring(percent, size = 92, stroke = 9, color = '#fff', track = 'rgba(255,255,255,.28)') {
+    const r = (size - stroke) / 2;
+    const c = 2 * Math.PI * r;
+    const off = c * (1 - Math.max(0, Math.min(100, percent)) / 100);
+    return `<div class="ring" style="width:${size}px;height:${size}px;">
+      <svg width="${size}" height="${size}" aria-hidden="true">
+        <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${track}" stroke-width="${stroke}"/>
+        <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
+          stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"
+          style="transition:stroke-dashoffset .6s ease"/>
+      </svg>
+      <div class="ring-label">${Math.round(percent)}%</div>
+    </div>`;
+  }
+
+  function emptyState(title, text, ctaHref, ctaLabel, iconName = 'inbox') {
+    return `<div class="empty">
+      <div class="icon">${icon(iconName)}</div>
+      <h2>${esc(title)}</h2>
+      <p>${esc(text)}</p>
+      ${ctaHref ? `<a class="btn btn-primary btn-lg" href="${ctaHref}">${esc(ctaLabel)}</a>` : ''}
+    </div>`;
+  }
+
+  // ---------------------------------------------------------------
+  // AUTH
+  // ---------------------------------------------------------------
+  function renderLogin() {
+    $app().innerHTML = `
+      <div class="center-screen">
+        <div class="card auth-card">
+          <h1>EDN Trainer</h1>
+          <p class="subtitle">Votre entraînement personnel, jusqu'à zéro erreur.</p>
+          <div class="field"><label for="email">Email</label>
+            <input type="email" id="email" autocomplete="email" inputmode="email" /></div>
+          <div class="field"><label for="password">Mot de passe</label>
+            <input type="password" id="password" autocomplete="current-password" /></div>
+          <div id="auth-error" class="small" style="color:var(--bad);margin-top:12px;" role="alert"></div>
+          <button class="btn btn-primary btn-lg btn-block mt" id="btn-login">Se connecter</button>
+          <button class="btn btn-block" id="btn-signup" style="margin-top:10px;">Créer un compte</button>
+        </div>
+      </div>`;
+    const errEl = document.getElementById('auth-error');
+    const setBusy = (b) => {
+      document.getElementById('btn-login').disabled = b;
+      document.getElementById('btn-signup').disabled = b;
+    };
+    document.getElementById('btn-login').onclick = async () => {
+      const email = document.getElementById('email').value, password = document.getElementById('password').value;
+      setBusy(true); errEl.style.color = 'var(--bad)'; errEl.textContent = '';
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      setBusy(false);
+      if (error) errEl.textContent = error.message; else route();
+    };
+    document.getElementById('btn-signup').onclick = async () => {
+      const email = document.getElementById('email').value, password = document.getElementById('password').value;
+      setBusy(true); errEl.style.color = 'var(--bad)'; errEl.textContent = '';
+      const { data, error } = await sb.auth.signUp({ email, password });
+      setBusy(false);
+      if (error) { errEl.textContent = error.message; return; }
+      if (data.user) await sb.from('profiles').upsert({ id: data.user.id, user_id: data.user.id });
+      errEl.style.color = 'var(--good)';
+      errEl.textContent = 'Compte créé. Vérifiez vos emails si la confirmation est activée, puis connectez-vous.';
+    };
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // DASHBOARD
+  // ---------------------------------------------------------------
+  async function renderDashboard() {
+    shell(skeleton(3), 'Accueil');
+    const { data: exams } = await sb.from('exams').select('*').eq('user_id', CURRENT_USER.id).order('created_at');
+    let totalQ = 0, totalMastered = 0, totalErrors = 0;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const examCards = [];
+
+    let totalReview = 0;
+    for (const ex of (exams || [])) {
+      const masteryMap = await EDNEngine.getMasteryMap(CURRENT_USER.id, ex.id);
+      // maîtrisée = dernière réponse exacte à 100 % ; à revoir = déjà tentée et
+      // dernière réponse imparfaite. Mêmes chiffres que les listes cliquables.
+      let mastered = 0, review = 0;
+      masteryMap.forEach(m => {
+        if (EDNEngine.isMastered(m)) mastered++;
+        else if (EDNEngine.isToReview(m)) review++;
+      });
+      const errors = await EDNEngine.countCurrentErrors(CURRENT_USER.id, ex.id, ex.current_cycle);
+      totalQ += ex.total_questions; totalMastered += mastered;
+      totalReview += review; totalErrors += errors;
+      const pct = ex.total_questions ? Math.round((mastered / ex.total_questions) * 100) : 0;
+      examCards.push({ ex, pct, errors });
+    }
+
+    const { data: todayAttempts } = await sb.from('attempts').select('id')
+      .eq('user_id', CURRENT_USER.id).gte('answered_at', today.toISOString());
+    const todayCount = (todayAttempts || []).length;
+
+    const { data: allAttempts } = await sb.from('attempts').select('is_correct').eq('user_id', CURRENT_USER.id);
+    const successRate = (allAttempts || []).length
+      ? Math.round(allAttempts.filter(a => a.is_correct).length / allAttempts.length * 100) : 0;
+
+    const globalPct = totalQ ? Math.round((totalMastered / totalQ) * 100) : 0;
+    const hour = new Date().getHours();
+    const hello = hour < 5 ? 'Bonne nuit' : hour < 18 ? 'Bonjour' : 'Bonsoir';
+    const name = (CURRENT_USER.email || '').split('@')[0];
+
+    const body = (exams || []).length === 0
+      ? emptyState('Votre bibliothèque est vide',
+          "Importez votre premier EDN blanc : l'application en fera une banque de questions et vous interrogera jusqu'à zéro erreur.",
+          '#/import', 'Importer mon premier EDN')
+      : `
+      <section class="hero mb">
+        ${ring(globalPct)}
+        <div style="min-width:0;">
+          <div class="hello">${hello}${name ? ', ' + esc(name) : ''}</div>
+          <h1>Progression globale</h1>
+          <div class="meta">${totalMastered} question${totalMastered > 1 ? 's' : ''} maîtrisée${totalMastered > 1 ? 's' : ''} sur ${totalQ}</div>
+        </div>
+      </section>
+
+      <div class="grid grid-2 mb">
+        <a class="card stat" href="#/list/mastered" style="display:block;"><div class="label">Maîtrisées</div>
+          <div class="value">${totalMastered}<small> / ${totalQ}</small></div></a>
+        <a class="card stat accent" href="#/list/review" style="display:block;"><div class="label">À revoir</div>
+          <div class="value">${totalReview}</div></a>
+        <div class="card stat"><div class="label">Réussite</div>
+          <div class="value">${successRate}<small>%</small></div></div>
+        <div class="card stat brand"><div class="label">Aujourd'hui</div>
+          <div class="value">${todayCount}</div></div>
+      </div>
+
+      <div class="flex-between mb"><h2>Mes examens</h2>
+        <a class="btn btn-sm" href="#/exams">Tout voir</a></div>
+      ${examCards.map(({ ex, pct, errors }) => `
+        <article class="card">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div style="min-width:0;">
+              <h3>${esc(ex.name)}</h3>
+              <div class="small">${ex.total_questions} questions · Cycle ${ex.current_cycle}</div>
+            </div>
+            <span class="badge ${errors ? 'badge-accent' : 'badge-maitrisee'}">${errors ? errors + ' à revoir' : 'à jour'}</span>
+          </div>
+          <div class="bar mt" style="margin-top:14px;"><i style="width:${pct}%"></i></div>
+          <div class="small" style="margin-top:6px;">${pct}% maîtrisé</div>
+          <div class="btn-row mt">
+            <a class="btn btn-primary" href="#/exam/${ex.id}/train">Continuer</a>
+            <a class="btn" href="#/exam/${ex.id}/mistakes">Mes erreurs</a>
+          </div>
+        </article>`).join('')}
+      <p class="small center mt">Version ${APP_VERSION}</p>
+    `;
+    shell(body, 'Accueil');
+  }
+
+  // ---------------------------------------------------------------
+  // MES EDN
+  // ---------------------------------------------------------------
+  async function renderExams() {
+    shell(skeleton(2), 'Mes EDN');
+    const { data: exams } = await sb.from('exams').select('*')
+      .eq('user_id', CURRENT_USER.id).order('created_at', { ascending: false });
+
+    if (!(exams || []).length) {
+      shell(emptyState('Votre bibliothèque est vide',
+        "Importez un EDN blanc (PDF, DOCX, XLSX ou CSV) pour commencer à vous entraîner.",
+        '#/import', 'Importer un EDN'), 'Mes EDN');
+      return;
+    }
+
+    const cards = [];
+    for (const ex of exams) {
+      const masteryMap = await EDNEngine.getMasteryMap(CURRENT_USER.id, ex.id);
+      let mastered = 0, fragile = 0;
+      masteryMap.forEach(m => {
+        if (m.status === 'maitrisee') mastered++;
+        if (m.status === 'fragile') fragile++;
+      });
+      const errors = await EDNEngine.countCurrentErrors(CURRENT_USER.id, ex.id, ex.current_cycle);
+      const pct = ex.total_questions ? Math.round((mastered / ex.total_questions) * 100) : 0;
+      const last = ex.updated_at ? new Date(ex.updated_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '—';
+      cards.push(`
+        <article class="card">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div style="min-width:0;">
+              <h3>${esc(ex.name)}</h3>
+              <div class="small">${ex.total_questions} questions · Cycle ${ex.current_cycle} · Activité ${last}</div>
+            </div>
+            <button class="btn btn-sm btn-danger" data-del="${ex.id}" aria-label="Supprimer ${esc(ex.name)}">Supprimer</button>
+          </div>
+
+          <div class="bar" style="margin:14px 0 8px;"><i style="width:${pct}%"></i></div>
+          <div class="flex-between small" style="margin-bottom:14px;">
+            <span>${pct}% maîtrisé</span>
+            <span>${mastered} maîtrisées · ${fragile} fragiles · ${errors} à revoir</span>
+          </div>
+
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#/exam/${ex.id}/train">Continuer</a>
+            <a class="btn" href="#/exam/${ex.id}/mistakes">Mes erreurs</a>
+          </div>
+          <div class="btn-row" style="margin-top:8px;">
+            <a class="btn btn-sm" href="#/exam/${ex.id}/exam-mode">Mode examen</a>
+            <a class="btn btn-sm" href="#/exam/${ex.id}/stats">Statistiques</a>
+          </div>
+        </article>`);
+    }
+
+    shell(`<h1>Mes EDN</h1><p class="subtitle">${exams.length} examen${exams.length > 1 ? 's' : ''} importé${exams.length > 1 ? 's' : ''}</p>
+      <a class="btn btn-accent btn-block mb" href="#/import">+ Importer un EDN</a>
+      ${cards.join('')}`, 'Mes EDN');
+
+    document.querySelectorAll('[data-del]').forEach(btn => {
+      btn.onclick = async () => {
+        if (!confirm('Supprimer définitivement cet examen et toutes ses données ?')) return;
+        btn.disabled = true;
+        await sb.from('exams').delete().eq('id', btn.dataset.del).eq('user_id', CURRENT_USER.id);
+        renderExams();
+      };
+    });
+  }
+
+  // Page "Réviser" : point d'entrée unique depuis la barre de navigation
+  async function renderRevise() {
+    shell(skeleton(2), 'Réviser');
+    const { data: exams } = await sb.from('exams').select('*')
+      .eq('user_id', CURRENT_USER.id).order('updated_at', { ascending: false });
+
+    if (!(exams || []).length) {
+      shell(emptyState('Rien à réviser pour l\'instant',
+        'Importez un EDN pour que l\'application puisse vous interroger sur vos erreurs.',
+        '#/import', 'Importer un EDN', 'target'), 'Réviser');
+      return;
+    }
+
+    const rows = [];
+    let total = 0;
+    for (const ex of exams) {
+      const errors = await EDNEngine.countCurrentErrors(CURRENT_USER.id, ex.id, ex.current_cycle);
+      total += errors;
+      rows.push({ ex, errors });
+    }
+
+    shell(`
+      <h1>Réviser</h1>
+      <p class="subtitle">Vos erreurs sont regroupées par examen, cycle par cycle.</p>
+      <section class="card stat accent mb" style="text-align:center;padding:28px;">
+        <div class="label">Questions à revoir</div>
+        <div class="value" style="font-size:2.6rem;">${total}</div>
+      </section>
+      ${rows.map(({ ex, errors }) => `
+        <article class="card">
+          <div class="flex-between">
+            <div style="min-width:0;">
+              <h3>${esc(ex.name)}</h3>
+              <div class="small">Cycle ${ex.current_cycle}</div>
+            </div>
+            <span class="badge ${errors ? 'badge-a_apprendre' : 'badge-maitrisee'}">${errors || 0}</span>
+          </div>
+          <div class="btn-row mt">
+            <a class="btn ${errors ? 'btn-primary' : ''}" href="#/exam/${ex.id}/mistakes">Réviser mes erreurs</a>
+            <a class="btn" href="#/exam/${ex.id}/train">Entraînement</a>
+          </div>
+        </article>`).join('')}`, 'Réviser');
+  }
+
+  // Page "Stats" globale : redirige vers l'examen si unique, sinon liste
+  async function renderStatsHub() {
+    shell(skeleton(2), 'Statistiques');
+    const { data: exams } = await sb.from('exams').select('id, name, total_questions')
+      .eq('user_id', CURRENT_USER.id).order('created_at');
+    if (!(exams || []).length) {
+      shell(emptyState('Pas encore de statistiques',
+        'Vos performances apparaîtront ici dès votre première session.',
+        '#/import', 'Importer un EDN', 'chart'), 'Statistiques');
+      return;
+    }
+    if (exams.length === 1) { location.hash = `#/exam/${exams[0].id}/stats`; return; }
+    shell(`<h1>Statistiques</h1><p class="subtitle">Choisissez un examen</p>
+      ${exams.map(e => `<a class="card" href="#/exam/${e.id}/stats" style="display:block;">
+        <div class="flex-between"><h3>${esc(e.name)}</h3><span class="small">${e.total_questions} questions</span></div>
+      </a>`).join('')}`, 'Statistiques');
+  }
+
+  // ---------------------------------------------------------------
+  // LISTES DE QUESTIONS (maîtrisées / à revoir) ET DÉTAIL
+  // ---------------------------------------------------------------
+  const STATUS_LABEL = { maitrisee: 'Maîtrisée', en_cours: 'En cours', fragile: 'Fragile', a_apprendre: 'À apprendre' };
+
+  // filter = 'mastered' | 'review'
+  async function renderQuestionList(filter) {
+    const mastered = filter === 'mastered';
+    const title = mastered ? 'Questions maîtrisées' : 'Questions à revoir';
+    shell(skeleton(3), title);
+
+    const { data: rows } = await sb.from('mastery').select('*').eq('user_id', CURRENT_USER.id);
+    const kept = (rows || []).filter(m => mastered ? EDNEngine.isMastered(m) : EDNEngine.isToReview(m));
+
+    if (!kept.length) {
+      shell(`<h1>${title}</h1>${emptyState(
+        mastered ? 'Aucune question maîtrisée pour l\'instant' : 'Aucune question à revoir',
+        mastered ? 'Une question devient maîtrisée quand votre dernière réponse est exacte à 100 %.'
+                 : 'Toutes les questions déjà répondues sont justes. Continuez l\'entraînement.',
+        '#/exams', 'Mes EDN', mastered ? 'target' : 'inbox')}`, title);
+      return;
+    }
+
+    // chargement des énoncés par paquets (liste potentiellement longue)
+    const ids = kept.map(m => m.question_id);
+    const byId = new Map();
+    for (let i = 0; i < ids.length; i += 200) {
+      const { data } = await sb.from('questions')
+        .select('id, question_number, question_text, exam_id, topic_id').in('id', ids.slice(i, i + 200));
+      (data || []).forEach(q => byId.set(q.id, q));
+    }
+    const { data: topics } = await sb.from('topics').select('id, name').eq('user_id', CURRENT_USER.id);
+    const topicName = new Map((topics || []).map(t => [t.id, t.name]));
+
+    const items = kept
+      .map(m => ({ m, q: byId.get(m.question_id) }))
+      .filter(x => x.q)
+      .sort((a, b) => (a.q.question_number || 0) - (b.q.question_number || 0));
+
+    const MAX = 150;
+    const shown = items.slice(0, MAX);
+
+    shell(`
+      <h1>${title}</h1>
+      <p class="subtitle">${items.length} question${items.length > 1 ? 's' : ''}</p>
+      ${shown.map(({ m, q }) => {
+        const st = EDNEngine.computeStatus(m);
+        const txt = String(q.question_text || '').split('\n\n').pop().trim();
+        return `<a class="card card-tight" href="#/question/${q.id}" style="display:block;">
+          <div class="flex-between" style="align-items:flex-start;">
+            <span class="small" style="font-family:var(--font-mono);">Q${q.question_number ?? '?'}${
+              q.topic_id && topicName.get(q.topic_id) ? ' · ' + esc(topicName.get(q.topic_id)) : ''}</span>
+            <span class="badge badge-${st}">${STATUS_LABEL[st]}</span>
+          </div>
+          <p style="margin:8px 0 6px;font-size:.94rem;color:var(--ink);">${esc(txt.slice(0, 140))}${txt.length > 140 ? '…' : ''}</p>
+          <div class="small">${m.total_correct || 0} juste(s) · ${m.total_incorrect || 0} erreur(s)</div>
+        </a>`;
+      }).join('')}
+      ${items.length > MAX ? `<p class="small center mt">${items.length - MAX} questions supplémentaires non affichées</p>` : ''}
+    `, title);
+  }
+
+  // Détail d'une question : ma réponse, les bonnes réponses, l'explication
+  async function renderQuestionDetail(questionId) {
+    shell(skeleton(2), 'Question');
+    const { data: q } = await sb.from('questions')
+      .select('*, question_options(*)').eq('id', questionId).single();
+    if (!q) { shell(emptyState('Question introuvable', '', '#/dashboard', 'Accueil'), 'Question'); return; }
+
+    const { data: attempts } = await sb.from('attempts')
+      .select('selected_answers, is_correct, answered_at, cycle_number')
+      .eq('question_id', questionId).eq('user_id', CURRENT_USER.id)
+      .order('answered_at', { ascending: true });
+
+    const { data: mastery } = await sb.from('mastery')
+      .select('*').eq('user_id', CURRENT_USER.id).eq('question_id', questionId).maybeSingle();
+
+    const last = (attempts || []).length ? attempts[attempts.length - 1] : null;
+    const mine = last ? (last.selected_answers || []) : [];
+    const opts = (q.question_options || []).sort((a, b) => a.position - b.position);
+    const correctKeys = opts.filter(o => o.is_correct).map(o => o.option_key);
+    const isOpen = (q.question_type || '') === 'qroc';
+    const st = EDNEngine.computeStatus(mastery);
+
+    const images = Array.isArray(q.images) ? q.images : [];
+    const mainImages = images.filter(im => !im.label)
+      .map(im => `<img src="${im.src}" class="q-image" alt="Illustration" loading="lazy"/>`).join('');
+
+    const parts = String(q.question_text || '').split('\n\n');
+    const hasContext = parts.length > 1 && /^\[Contexte/.test(parts[0]);
+    const contextHtml = hasContext
+      ? `<div class="q-context">${esc(parts[0].replace(/^\[Contexte\s*[^\]]*\]\s*/, ''))}</div>` : '';
+    const statement = esc(hasContext ? parts.slice(1).join('\n\n') : q.question_text);
+
+    // propositions : vert = bonne réponse officielle, rouge = cochée à tort
+    const optionsHtml = isOpen
+      ? `<div class="explain"><h4>Réponses acceptées</h4><p>${opts.map(o => esc(o.option_text)).join(' · ')}</p></div>`
+      : opts.map(o => {
+          const good = o.is_correct, picked = mine.includes(o.option_key);
+          const cls = good ? 'correct' : (picked ? 'incorrect' : '');
+          const tag = good && picked ? ' · cochée, juste' : good ? ' · attendue' : picked ? ' · cochée à tort' : '';
+          return `<div class="option disabled ${cls}">
+            <span class="key" aria-hidden="true">${o.option_key}</span>
+            <span class="body">${esc(o.option_text)}
+              ${tag ? `<span class="small" style="display:block;margin-top:4px;">${tag}</span>` : ''}
+              ${images.filter(im => im.label === o.option_key).map(im => `<img src="${im.src}" class="q-image" alt="Illustration" loading="lazy"/>`).join('')}
+            </span></div>`;
+        }).join('');
+
+    const mineLabel = isOpen
+      ? (mine.length ? esc(mine.join(', ')) : '—')
+      : (mine.length ? mine.join(', ') : '—');
+
+    const historyHtml = (attempts || []).length ? `
+      <div class="card">
+        <h2>Historique</h2>
+        <p class="small">${attempts.length} tentative${attempts.length > 1 ? 's' : ''} · conservées intégralement</p>
+        <div style="margin-top:12px;">
+          ${attempts.map((a, i) => `<div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--line);">
+            <span class="small">Tentative ${i + 1} · cycle ${a.cycle_number} · ${new Date(a.answered_at).toLocaleDateString('fr-FR')}</span>
+            <span class="badge ${a.is_correct ? 'badge-maitrisee' : 'badge-a_apprendre'}">${a.is_correct ? 'Juste' : 'Faux'}</span>
+          </div>`).join('')}
+        </div>
+      </div>` : '';
+
+    shell(`
+      <div class="question-shell">
+        <div class="flex-between mb">
+          <h1>Question ${q.question_number ?? ''}</h1>
+          <span class="badge badge-${st}">${STATUS_LABEL[st]}</span>
+        </div>
+        ${contextHtml}
+        <div class="q-text">${statement}</div>
+        ${mainImages}
+        <div style="margin-bottom:20px;">${optionsHtml}</div>
+
+        <div class="explain">
+          <h4>Ma réponse</h4>
+          <p style="color:${last && last.is_correct ? 'var(--good)' : 'var(--bad)'};font-weight:700;">
+            ${mineLabel}${last ? (last.is_correct ? ' — juste' : ' — fausse') : ' — jamais répondue'}</p>
+        </div>
+        ${!isOpen && correctKeys.length ? `<div class="explain">
+          <h4>Bonne(s) réponse(s)</h4>
+          <p style="color:var(--good);font-weight:700;">${correctKeys.join(', ')}</p></div>` : ''}
+        ${q.official_correction ? `<div class="explain"><h4>Correction officielle</h4><p>${esc(q.official_correction)}</p></div>` : ''}
+        ${q.explanation ? `<div class="explain"><h4>Explication</h4><p>${esc(q.explanation)}</p></div>` : ''}
+
+        ${historyHtml}
+
+        <div class="btn-row mt">
+          <button class="btn btn-block" id="back-btn">Retour</button>
+        </div>
+      </div>
+    `, 'Question');
+    document.getElementById('back-btn').onclick = () => history.back();
+  }
+
+  // ---------------------------------------------------------------
+  // DIAGNOSTIC LCA — lecture seule, sur les données réelles de Supabase.
+  // N'écrit rien, ne modifie rien, n'affiche aucune clé ni token.
+  // Accès via #/diagnostic, avec la session de l'utilisateur (RLS inchangée).
+  // ---------------------------------------------------------------
+  async function renderDiagnostic() {
+    shell(skeleton(3), 'Diagnostic');
+    const log = [];
+    const push = (l) => log.push(l);
+    let html = '';
+
+    try {
+      const { data: exams, error: exErr } = await sb.from('exams')
+        .select('id, name, total_questions, current_cycle')
+        .eq('user_id', CURRENT_USER.id).order('created_at');
+      if (exErr) throw exErr;
+      push('Examens trouvés : ' + (exams || []).length);
+
+      for (const ex of (exams || [])) {
+        push('');
+        push('════ ' + ex.name + ' ════');
+
+        // --- A. ce qui est RÉELLEMENT en base ---
+        const { data: qs, error: qErr } = await sb.from('questions')
+          .select('id, topic_id, question_number, question_type, position, question_text')
+          .eq('exam_id', ex.id).order('position');
+        if (qErr) throw qErr;
+        const { data: topics } = await sb.from('topics').select('id, name').eq('exam_id', ex.id);
+        const topicName = new Map((topics || []).map(t => [t.id, t.name || '']));
+
+        const enBase = (qs || []).filter(q => isLcaQuestion(q.question_text, topicName.get(q.topic_id)));
+        const classiques = (qs || []).length - enBase.length;
+        push('Questions en base : ' + (qs || []).length + ' (annoncé sur l\'examen : ' + ex.total_questions + ')');
+        push('Classiques : ' + classiques + ' · LCA détectées : ' + enBase.length);
+
+        // détail du signal qui a permis la détection (pour identifier une donnée mal enregistrée)
+        const parSignal = { theme: 0, contexte: 0, consigne: 0, autre: 0 };
+        enBase.forEach(q => {
+          const th = topicName.get(q.topic_id) || '';
+          const head = String(q.question_text || '').slice(0, 400);
+          if (/LCA/i.test(th)) parSignal.theme++;
+          else if (/^\s*\[Contexte[^\]]*LCA/i.test(head)) parSignal.contexte++;
+          else if (/(prendre|prenez)\s+connaissance\s+de\s+l['’\s]*article/i.test(head)) parSignal.consigne++;
+          else parSignal.autre++;
+        });
+        push('Reconnues par : thème=' + parSignal.theme + ' contexte=' + parSignal.contexte +
+             ' consigne=' + parSignal.consigne + ' autre=' + parSignal.autre);
+
+        const dossiers = {};
+        enBase.forEach(q => { const t = topicName.get(q.topic_id) || 'sans thème'; dossiers[t] = (dossiers[t] || 0) + 1; });
+        push('Dossiers LCA : ' + (Object.keys(dossiers).length ? JSON.stringify(dossiers) : 'aucun'));
+        push('Thèmes de l\'examen : ' + [...new Set((qs || []).map(q => topicName.get(q.topic_id) || 'sans thème'))].join(' | '));
+        push('Types enregistrés (LCA) : ' + JSON.stringify(enBase.reduce((a, q) => {
+          a[q.question_type || 'null'] = (a[q.question_type || 'null'] || 0) + 1; return a; }, {})));
+
+        // --- B. ce que renvoie le FILTRE ---
+        const only = await getOrderedQuestionIds(ex.id, 'only');
+        const last = await getOrderedQuestionIds(ex.id, 'last');
+        const excl = await getOrderedQuestionIds(ex.id, 'exclude');
+        push('Filtre « uniquement LCA » : ' + only.ids.length + ' questions');
+        push('Filtre « à la fin » : ' + last.ids.length + ' · « exclure » : ' + excl.ids.length);
+
+        // --- C. ce que contiennent les SESSIONS enregistrées dans ce navigateur ---
+        const sessions = {};
+        ['exam', 'lca', 'errors'].forEach(m => {
+          const sv = readResume(ex.id, m);
+          if (sv) sessions[m] = { taille: sv.queue.length, position: sv.index, filtre: sv.lcaMode || '—', cycle: sv.cycleNumber };
+        });
+        push('Sessions enregistrées : ' + (Object.keys(sessions).length ? JSON.stringify(sessions) : 'aucune'));
+
+        // --- TESTS ---
+        const idsBase = enBase.map(q => q.id);
+        const setFiltre = new Set(only.ids);
+        const manquantes = idsBase.filter(id => !setFiltre.has(id));
+        const intruses = only.ids.filter(id => !idsBase.includes(id));
+        const themesOrdre = only.ids.map(id => {
+          const q = (qs || []).find(x => x.id === id); return topicName.get(q.topic_id) || 'sans thème'; });
+        const groupes = themesOrdre.every((t, i, a) => i === 0 || t === a[i - 1] || !a.slice(0, i).includes(t));
+        const ordreOK = JSON.stringify(only.ids) === JSON.stringify(idsBase);
+        const premiere = only.ids.length ? (qs || []).find(x => x.id === only.ids[0]) : null;
+        const sessionLca = readResume(ex.id, 'lca');
+        const sessionCoherente = !sessionLca || sessionLca.queue.every(id => setFiltre.has(id));
+
+        const tests = [
+          ['B. le filtre ne renvoie que des LCA', intruses.length === 0,
+            intruses.length ? intruses.length + ' question(s) classique(s) : ' + intruses.slice(0, 5).join(', ') : ''],
+          ['C. exhaustivité : aucune LCA oubliée', manquantes.length === 0,
+            manquantes.length ? manquantes.length + ' manquante(s) : ' + manquantes.slice(0, 5).join(', ') : ''],
+          ['D. ordre d\'origine respecté', ordreOK, ordreOK ? '' : 'l\'ordre diffère de celui de la base'],
+          ['E. commence au début du 1er dossier', !!premiere,
+            premiere ? 'question n°' + premiere.question_number + ' · ' + (topicName.get(premiere.topic_id) || 'sans thème') : 'aucune question'],
+          ['F. articles regroupés, non mélangés', groupes, ''],
+          ['G. compteur = questions chargées', only.ids.length === idsBase.length,
+            only.ids.length + ' vs ' + idsBase.length + ' en base'],
+          ['H. session LCA cohérente avec le filtre', sessionCoherente,
+            sessionCoherente ? '' : 'une session LCA enregistrée contient des questions hors filtre'],
+          ['I. aucune perte : exclure + uniquement = total',
+            excl.ids.length + only.ids.length === (qs || []).length,
+            excl.ids.length + ' + ' + only.ids.length + ' = ' + (excl.ids.length + only.ids.length) + ' / ' + (qs || []).length]
+        ];
+        const reussi = tests.every(t => t[1]);
+        tests.forEach(t => push((t[1] ? 'OK   ' : 'ÉCHEC') + ' ' + t[0] + (t[2] ? ' — ' + t[2] : '')));
+
+        // liste détaillée des LCA
+        const detail = enBase.slice(0, 40).map(q => {
+          const rang = only.ids.indexOf(q.id);
+          return `<tr><td>${q.question_number ?? '?'}</td><td>${esc((topicName.get(q.topic_id) || '—').split('· ').pop())}</td>
+            <td>${esc(q.question_type || '—')}</td><td>${q.position}</td><td>${rang >= 0 ? rang + 1 : '<b style="color:var(--bad)">absente</b>'}</td></tr>`;
+        }).join('');
+
+        html += `
+          <article class="card">
+            <div class="flex-between"><h2>${esc(ex.name)}</h2>
+              <span class="badge ${reussi ? 'badge-maitrisee' : 'badge-a_apprendre'}">${reussi ? 'TEST RÉUSSI' : 'TEST ÉCHOUÉ'}</span></div>
+            <div class="small" style="margin:8px 0 14px;">
+              ${(qs || []).length} questions en base · ${classiques} classiques · <strong>${enBase.length} LCA</strong><br/>
+              Filtre « uniquement LCA » : <strong>${only.ids.length}</strong> question(s) retournée(s)<br/>
+              Dossiers : ${esc(Object.entries(dossiers).map(([k, v]) => k.split('· ').pop() + ' (' + v + ')').join(', ') || 'aucun')}
+            </div>
+            ${tests.map(t => `<div class="small" style="padding:4px 0;color:${t[1] ? 'var(--good)' : 'var(--bad)'};">
+              ${t[1] ? '✓' : '✕'} ${t[0]}${t[2] ? ' — ' + esc(t[2]) : ''}</div>`).join('')}
+            ${enBase.length ? `<div style="overflow-x:auto;margin-top:14px;">
+              <table class="small" style="width:100%;border-collapse:collapse;">
+                <tr style="text-align:left;color:var(--ink-3);"><th>N°</th><th>Dossier</th><th>Type</th><th>Position</th><th>Rang filtre</th></tr>
+                ${detail}</table>
+              ${enBase.length > 40 ? `<p class="small">… ${enBase.length - 40} autres</p>` : ''}</div>` : ''}
+            <div class="small mt">Sessions enregistrées : ${esc(JSON.stringify(sessions))}</div>
+          </article>`;
+      }
+    } catch (e) {
+      push('ERREUR : ' + (e.message || String(e)));
+      html += `<div class="card" style="border-color:var(--bad);color:var(--bad);">Diagnostic interrompu : ${esc(e.message || String(e))}</div>`;
+    }
+
+    shell(`
+      <h1>Diagnostic LCA</h1>
+      <p class="subtitle">Lecture seule des données réelles de votre base. Version ${APP_VERSION}</p>
+      ${html || '<p class="small">Aucun examen.</p>'}
+      <div class="card">
+        <h2>Rapport technique</h2>
+        <p class="small">À copier et à transmettre en cas d'anomalie. Ne contient ni clé ni identifiant de connexion.</p>
+        <textarea id="diag-log" rows="12" readonly style="font-family:var(--font-mono);font-size:.78rem;">${esc(log.join('\n'))}</textarea>
+        <button class="btn btn-block mt" id="copy-log">Copier le rapport</button>
+      </div>
+      <a class="btn btn-block mt" href="#/exams">Retour</a>
+    `, 'Diagnostic');
+
+    const copy = document.getElementById('copy-log');
+    if (copy) copy.onclick = async () => {
+      const ta = document.getElementById('diag-log');
+      try { await navigator.clipboard.writeText(ta.value); copy.textContent = 'Rapport copié'; }
+      catch (e) { ta.select(); copy.textContent = 'Sélectionné — faites Copier'; }
+    };
+  }
+
+  // ---------------------------------------------------------------
+  // IMPORT
+  // ---------------------------------------------------------------
+  let PENDING_IMPORT = null; // { examName, questions: [...] }
+
+  let IMPORT_FILES = [];      // fichiers sélectionnés, en attente d'analyse
+  let IMPORT_TARGET = 'new';  // 'new' ou l'id d'un examen existant
+
+  async function renderImport() {
+    const { data: exams } = await sb.from('exams')
+      .select('id, name, total_questions').eq('user_id', CURRENT_USER.id).order('created_at', { ascending: false });
+
+    shell(`
+      <h1>Importer un EDN</h1>
+      <p class="subtitle">Un EDN peut être composé de plusieurs fichiers : ajoutez-les tous, ils formeront un seul examen.</p>
+
+      <div class="stepper" aria-label="Étapes de l'import">
+        <div class="step current"><i></i>Fichiers</div>
+        <div class="step"><i></i>Analyse</div>
+        <div class="step"><i></i>Vérification</div>
+        <div class="step"><i></i>Import</div>
+      </div>
+
+      <div class="card">
+        <label>Cet import alimente</label>
+        <select id="target-exam">
+          <option value="new">Un nouvel examen</option>
+          ${(exams || []).map(e => `<option value="${e.id}" ${IMPORT_TARGET === e.id ? 'selected' : ''}>${esc(e.name)} (${e.total_questions} questions)</option>`).join('')}
+        </select>
+
+        <div id="new-exam-field" class="field">
+          <label>Nom de l'examen</label>
+          <input type="text" id="exam-name" placeholder="Ex : EDN Blanc 1 — Juillet 2026" />
+        </div>
+
+        <div class="dropzone mt" id="dropzone" role="button" tabindex="0">
+          <input type="file" id="file-input" accept=".csv,.xlsx,.xls,.docx,.pdf" multiple style="display:none" />
+          <strong>Choisir un ou plusieurs fichiers</strong>
+          <span class="small">PDF, DOCX, XLSX ou CSV — glisser-déposer accepté</span>
+        </div>
+
+        <div id="file-list" class="filelist mt">${renderFileList()}</div>
+        <div id="import-status" class="small mt"></div>
+
+        <button class="btn btn-accent btn-lg mt btn-block" id="analyze-btn" ${IMPORT_FILES.length ? '' : 'disabled'}>
+          Analyser ${IMPORT_FILES.length || ''} fichier${IMPORT_FILES.length > 1 ? 's' : ''}
+        </button>
+      </div>
+
+      <div class="card small">
+        Les fichiers sont analysés dans l'ordre où vous les ajoutez, et leurs questions se suivent dans l'examen.
+        Vous pourrez tout vérifier avant l'enregistrement définitif.
+      </div>
+    `, 'Importer');
+
+    const targetSel = document.getElementById('target-exam');
+    const newField = document.getElementById('new-exam-field');
+    const syncTarget = () => {
+      IMPORT_TARGET = targetSel.value;
+      newField.style.display = IMPORT_TARGET === 'new' ? 'block' : 'none';
+    };
+    targetSel.onchange = syncTarget;
+    syncTarget();
+
+    const dz = document.getElementById('dropzone'), input = document.getElementById('file-input');
+    dz.onclick = () => input.click();
+    dz.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } };
+    dz.ondragover = (e) => { e.preventDefault(); dz.classList.add('over'); };
+    dz.ondragleave = () => dz.classList.remove('over');
+    dz.ondrop = (e) => { e.preventDefault(); dz.classList.remove('over'); addFiles(e.dataTransfer.files); };
+    input.onchange = () => addFiles(input.files);
+    document.getElementById('analyze-btn').onclick = analyzeFiles;
+    attachFileListHandlers();
+  }
+
+  function renderFileList() {
+    if (!IMPORT_FILES.length) return '<p class="small">Aucun fichier sélectionné pour l\'instant.</p>';
+    return IMPORT_FILES.map((f, i) => `
+      <div class="row">
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(f.name)}
+          <span class="small">· ${Math.round(f.size / 1024)} Ko</span></span>
+        <button class="btn btn-sm btn-danger" data-rm="${i}" aria-label="Retirer ${esc(f.name)}">Retirer</button>
+      </div>`).join('');
+  }
+
+  function attachFileListHandlers() {
+    document.querySelectorAll('[data-rm]').forEach(b => {
+      b.onclick = () => {
+        IMPORT_FILES.splice(Number(b.dataset.rm), 1);
+        refreshFileList();
+      };
+    });
+  }
+
+  function refreshFileList() {
+    const list = document.getElementById('file-list');
+    if (list) { list.innerHTML = renderFileList(); attachFileListHandlers(); }
+    const btn = document.getElementById('analyze-btn');
+    if (btn) {
+      btn.disabled = !IMPORT_FILES.length;
+      btn.textContent = `Analyser ${IMPORT_FILES.length || ''} fichier${IMPORT_FILES.length > 1 ? 's' : ''}`;
+    }
+  }
+
+  function addFiles(fileList) {
+    for (const f of fileList) {
+      if (!IMPORT_FILES.some(x => x.name === f.name && x.size === f.size)) IMPORT_FILES.push(f);
+    }
+    refreshFileList();
+  }
+
+  // Étiquette courte dérivée du nom de fichier, pour préfixer les thèmes
+  // quand plusieurs fichiers composent un même examen.
+  function fileTag(name) {
+    return name.replace(/\.[^.]+$/, '').replace(/[_\-]+/g, ' ').trim().slice(0, 28);
+  }
+
+  async function analyzeFiles() {
+    const statusEl = document.getElementById('import-status');
+    const btn = document.getElementById('analyze-btn');
+    let examName = '';
+
+    if (IMPORT_TARGET === 'new') {
+      examName = document.getElementById('exam-name').value.trim();
+      if (!examName) {
+        statusEl.style.color = 'var(--bad)';
+        statusEl.textContent = 'Donnez un nom à l\'examen avant d\'analyser.';
+        return;
+      }
+    }
+    if (!IMPORT_FILES.length) return;
+
+    btn.disabled = true;
+    statusEl.style.color = 'var(--ink-soft)';
+
+    const multi = IMPORT_FILES.length > 1;
+    const allQuestions = [];
+    const fileInfos = [];
+    const failed = [];
+
+    for (let fi = 0; fi < IMPORT_FILES.length; fi++) {
+      const file = IMPORT_FILES[fi];
+      const tag = fileTag(file.name);
+      statusEl.textContent = `Fichier ${fi + 1}/${IMPORT_FILES.length} — ${file.name} : analyse en cours…`;
+      try {
+        const questions = await EDNParsers.parseFile(file, (done, total, phase) => {
+          statusEl.textContent = `Fichier ${fi + 1}/${IMPORT_FILES.length} — ${file.name} : ${phase || 'lecture'} ${done}/${total}`;
+        });
+        questions.forEach(q => {
+          q.source_file = file.name;
+          // les thèmes sont préfixés pour ne pas confondre le DP01 de deux fichiers
+          if (multi) q.theme = q.theme ? `${tag} · ${q.theme}` : tag;
+        });
+        allQuestions.push(...questions);
+        fileInfos.push({ name: file.name, type: file.name.split('.').pop().toLowerCase(), count: questions.length });
+      } catch (e) {
+        console.error(e);
+        failed.push(`${file.name} : ${e.message || e}`);
+      }
+    }
+
+    if (!allQuestions.length) {
+      statusEl.style.color = 'var(--bad)';
+      statusEl.textContent = 'Aucune question n\'a pu être extraite. ' + failed.join(' | ');
+      btn.disabled = false;
+      return;
+    }
+
+    allQuestions.forEach((q, i) => { q.question_number = i + 1; });
+
+    PENDING_IMPORT = {
+      examName,
+      targetExamId: IMPORT_TARGET === 'new' ? null : IMPORT_TARGET,
+      files: fileInfos,
+      failed,
+      questions: allQuestions
+    };
+    IMPORT_FILES = [];
+    location.hash = '#/import/verify';
+  }
+
+  let VERIFY_FILTER = 'review'; // review | all
+
+  function renderImportVerify() {
+    if (!PENDING_IMPORT) { location.hash = '#/import'; return; }
+    const { questions, examName } = PENDING_IMPORT;
+    const okCount = questions.filter(q => !q.needs_review).length;
+    const reviewCount = questions.length - okCount;
+    const shown = questions
+      .map((q, i) => ({ q, i }))
+      .filter(({ q }) => VERIFY_FILTER === 'all' || q.needs_review);
+
+    const files = PENDING_IMPORT.files || [];
+    const failed = PENDING_IMPORT.failed || [];
+    const title = PENDING_IMPORT.targetExamId ? 'Ajout à un examen existant' : esc(examName);
+
+    shell(`
+      <div class="stepper" aria-label="Étapes de l'import">
+        <div class="step done"><i></i>Fichiers</div>
+        <div class="step done"><i></i>Analyse</div>
+        <div class="step current"><i></i>Vérification</div>
+        <div class="step"><i></i>Import</div>
+      </div>
+      <h1>Vérification de l'import</h1>
+      <p class="subtitle">${title} — <strong>${questions.length}</strong> question(s) détectée(s) :
+        <span style="color:var(--good)">${okCount} correctement structurées</span> ·
+        <span style="color:var(--warn)">${reviewCount} à vérifier</span></p>
+      ${files.length > 1 ? `<div class="card small"><strong>Fichiers analysés</strong>${files.map(f => `
+        <div class="flex-between" style="padding:4px 0;"><span>${esc(f.name)}</span><span>${f.count} questions</span></div>`).join('')}</div>` : ''}
+      ${failed.length ? `<div class="card small" style="border-color:var(--bad);color:var(--bad)">
+        <strong>Fichiers non exploitables</strong><br/>${failed.map(esc).join('<br/>')}</div>` : ''}
+      <div class="card small">
+        Rien n'a été deviné : les questions ci-dessous sont celles dont l'extraction est incertaine.
+        Corrigez-les si besoin, puis validez.
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+        <button class="btn" id="f-review" ${VERIFY_FILTER === 'review' ? 'style="border-color:var(--brand);color:var(--brand)"' : ''}>À vérifier (${reviewCount})</button>
+        <button class="btn" id="f-all" ${VERIFY_FILTER === 'all' ? 'style="border-color:var(--brand);color:var(--brand)"' : ''}>Toutes (${questions.length})</button>
+      </div>
+      <div id="review-list">${shown.length
+        ? shown.map(({ q, i }) => renderReviewRow(q, i)).join('')
+        : '<p class="small">Aucune question à vérifier : tout est correctement structuré.</p>'}</div>
+      <div class="btn-row mt">
+        <button class="btn" id="cancel-import">Annuler</button>
+        <button class="btn btn-good btn-lg" id="validate-import">Valider l'import (${questions.length} questions)</button>
+      </div>
+      <div id="import-progress" class="small mt" role="status"></div>
+    `, 'Vérification');
+    document.getElementById('f-review').onclick = () => { VERIFY_FILTER = 'review'; renderImportVerify(); };
+    document.getElementById('f-all').onclick = () => { VERIFY_FILTER = 'all'; renderImportVerify(); };
+    document.getElementById('cancel-import').onclick = () => { PENDING_IMPORT = null; location.hash = '#/import'; };
+    document.getElementById('validate-import').onclick = commitImport;
+    shown.forEach(({ i }) => attachReviewRowHandlers(i));
+  }
+
+  function renderReviewRow(q, i) {
+    return `
+      <div class="review-row ${q.needs_review ? 'needs-review' : ''}" data-idx="${i}">
+        <div class="row-head">
+          <strong>Question ${q.question_number ?? i + 1}</strong>
+          ${q.needs_review ? `<span class="badge badge-fragile">À vérifier — ${esc(q.review_reason)}</span>` : `<span class="badge badge-maitrisee">OK</span>`}
+        </div>
+        ${(q.images || []).length ? `<div class="small" style="margin-bottom:6px;">${q.images.length} image(s) récupérée(s) depuis le PDF</div>
+          ${q.images.map(im => `<img src="${im.src}" class="q-image" style="max-height:160px;" />`).join('')}` : ''}
+        <label>Énoncé</label>
+        <textarea rows="2" data-field="question_text" data-i="${i}">${esc(q.question_text)}</textarea>
+        <label>Thème / item</label>
+        <input type="text" data-field="theme" data-i="${i}" value="${esc(q.theme)}" />
+        <label>${q.question_type === 'qroc' ? 'Réponses acceptées (réponse libre)' : 'Propositions (cochez la ou les bonnes réponses)'}</label>
+        ${(q.options.length ? q.options : [{ key: 'A', text: '', is_correct: false }]).map((o, oi) => `
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+            <input type="checkbox" data-opt-correct="${i}:${oi}" ${o.is_correct ? 'checked' : ''} />
+            <span class="small" style="width:16px;">${o.key}</span>
+            <input type="text" data-opt-text="${i}:${oi}" value="${esc(o.text)}" />
+          </div>`).join('')}
+        <label>Correction officielle</label>
+        <textarea rows="2" data-field="official_correction" data-i="${i}">${esc(q.official_correction)}</textarea>
+        <label>Explication</label>
+        <textarea rows="2" data-field="explanation" data-i="${i}">${esc(q.explanation)}</textarea>
+      </div>`;
+  }
+
+  function attachReviewRowHandlers(i) {
+    const row = document.querySelector(`.review-row[data-idx="${i}"]`);
+    row.querySelectorAll('[data-field]').forEach(el => {
+      el.onchange = () => { PENDING_IMPORT.questions[i][el.dataset.field] = el.value; };
+    });
+    row.querySelectorAll('[data-opt-text]').forEach(el => {
+      el.onchange = () => {
+        const [qi, oi] = el.dataset.optText.split(':').map(Number);
+        if (!PENDING_IMPORT.questions[qi].options[oi]) PENDING_IMPORT.questions[qi].options[oi] = { key: String.fromCharCode(65 + oi), is_correct: false };
+        PENDING_IMPORT.questions[qi].options[oi].text = el.value;
+      };
+    });
+    row.querySelectorAll('[data-opt-correct]').forEach(el => {
+      el.onchange = () => {
+        const [qi, oi] = el.dataset.optCorrect.split(':').map(Number);
+        PENDING_IMPORT.questions[qi].options[oi].is_correct = el.checked;
+      };
+    });
+  }
+
+  async function commitImport() {
+    const btn = document.getElementById('validate-import');
+    const progress = document.getElementById('import-progress');
+    btn.disabled = true; btn.textContent = 'Enregistrement…';
+    const say = (t) => { if (progress) progress.textContent = t; };
+    const { examName, targetExamId, files, questions } = PENDING_IMPORT;
+
+    let createdExamId = null;
+    try {
+      let exam, positionOffset = 0;
+
+      if (targetExamId) {
+        const { data: existing, error: getErr } = await sb.from('exams')
+          .select('*').eq('id', targetExamId).single();
+        if (getErr) throw getErr;
+        exam = existing;
+        const { data: last } = await sb.from('questions')
+          .select('position').eq('exam_id', exam.id).order('position', { ascending: false }).limit(1);
+        positionOffset = last && last.length ? last[0].position + 1 : 0;
+        const { error: upErr } = await sb.from('exams').update({
+          total_questions: exam.total_questions + questions.length,
+          updated_at: new Date().toISOString()
+        }).eq('id', exam.id);
+        if (upErr) throw upErr;
+      } else {
+        const { data: created, error: exErr } = await sb.from('exams').insert({
+          user_id: CURRENT_USER.id,
+          name: examName,
+          source_file: (files || []).map(f => f.name).join(', ').slice(0, 500),
+          total_questions: questions.length
+        }).select().single();
+        if (exErr) throw exErr;
+        exam = created;
+        createdExamId = created.id;
+      }
+
+      if (files && files.length) {
+        await sb.from('imported_files').insert(files.map(f => ({
+          user_id: CURRENT_USER.id, exam_id: exam.id,
+          file_name: f.name, file_type: f.type, import_status: 'verified'
+        })));
+      }
+
+      // 1. thèmes (une insertion pour tous)
+      say('Enregistrement des thèmes…');
+      const themeNames = [...new Set(questions.map(q => (q.theme || '').trim()).filter(Boolean))];
+      const topicIds = new Map();
+      const { data: existingTopics } = await sb.from('topics').select('id, name').eq('exam_id', exam.id);
+      (existingTopics || []).forEach(t => topicIds.set(t.name, t.id));
+      const missing = themeNames.filter(n => !topicIds.has(n));
+      if (missing.length) {
+        const { data: topics, error: tErr } = await sb.from('topics')
+          .insert(missing.map(name => ({ user_id: CURRENT_USER.id, exam_id: exam.id, name: EDNParsers.sanitize(name) })))
+          .select();
+        if (tErr) throw tErr;
+        topics.forEach(t => topicIds.set(t.name, t.id));
+      }
+
+      // 2. questions par lots de 100
+      say('Enregistrement des questions…');
+      const createdQuestions = [];
+      // lots plus petits si des images sont embarquées (payload plus lourd)
+      const hasImages = questions.some(q => q.images && q.images.length);
+      const CHUNK = hasImages ? 20 : 100;
+      for (let i = 0; i < questions.length; i += CHUNK) {
+        const clean = (v) => (EDNParsers.sanitize ? EDNParsers.sanitize(v) : v) || null;
+        const slice = questions.slice(i, i + CHUNK).map((q, k) => ({
+          user_id: CURRENT_USER.id, exam_id: exam.id,
+          topic_id: topicIds.get((q.theme || '').trim()) || null,
+          question_number: (positionOffset + i + k + 1),
+          question_text: clean(q.question_text) || '(énoncé à compléter)',
+          question_type: q.question_type || 'qrm',
+          position: positionOffset + i + k,
+          student_initial_answer: clean(q.student_initial_answer),
+          official_correction: clean(q.official_correction),
+          explanation: clean(q.explanation),
+          images: q.images || [],
+          needs_review: !!q.needs_review
+        }));
+        const { data, error } = await sb.from('questions').insert(slice).select('id, position');
+        if (error) throw error;
+        createdQuestions.push(...data);
+        say(`Enregistrement des questions… ${Math.min(i + CHUNK, questions.length)}/${questions.length}`);
+      }
+
+      // 3. propositions par lots de 500
+      say('Enregistrement des propositions…');
+      const byPosition = new Map(createdQuestions.map(r => [r.position - positionOffset, r.id]));
+      const allOptions = [];
+      questions.forEach((q, idx) => {
+        const questionId = byPosition.get(idx);
+        if (!questionId) return;
+        (q.options || []).filter(o => o.text && o.text.trim()).forEach((o, oi) => {
+          allOptions.push({
+            user_id: CURRENT_USER.id, question_id: questionId,
+            option_key: o.key || String.fromCharCode(65 + oi),
+            option_text: EDNParsers.sanitize(o.text).trim(), is_correct: !!o.is_correct, position: oi
+          });
+        });
+      });
+      for (let i = 0; i < allOptions.length; i += 500) {
+        const { error } = await sb.from('question_options').insert(allOptions.slice(i, i + 500));
+        if (error) throw error;
+        say(`Enregistrement des propositions… ${Math.min(i + 500, allOptions.length)}/${allOptions.length}`);
+      }
+
+      PENDING_IMPORT = null;
+      location.hash = `#/exam/${exam.id}/train`;
+    } catch (e) {
+      console.error(e);
+      say('');
+      // un examen partiellement enregistré est supprimé pour éviter les doublons
+      if (createdExamId) {
+        try { await sb.from('exams').delete().eq('id', createdExamId).eq('user_id', CURRENT_USER.id); } catch (_) {}
+      }
+      alert('Erreur pendant l\'enregistrement : ' + (e.message || e) +
+        '\n\nL\'examen incomplet a été supprimé, vous pouvez relancer l\'import.');
+      btn.disabled = false;
+      btn.textContent = 'Valider l\'import';
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // ENTRAÎNEMENT (moteur principal)
+  // ---------------------------------------------------------------
+  // Deux sessions indépendantes par examen : l'examen principal et la révision
+  // des erreurs. Réviser ses erreurs ne touche donc jamais à la position
+  // atteinte dans l'examen.
+  // Une session enregistrée par FILTRE : l'examen classique, la séance LCA et
+  // la révision des erreurs ne se marchent plus dessus.
+  const SESSION_MODES = ['exam', 'lca', 'errors'];
+  const RESUME_KEY = (examId, mode) =>
+    `edn_resume_${examId}_${SESSION_MODES.includes(mode) ? mode : 'exam'}`;
+  const readResume = (examId, mode) => {
+    try { return JSON.parse(localStorage.getItem(RESUME_KEY(examId, mode)) || 'null'); }
+    catch (e) { return null; }
+  };
+
+  async function renderTrain(examId) {
+    shell(skeleton(2), 'Entraînement');
+    const { data: exam } = await sb.from('exams').select('*').eq('id', examId).single();
+    if (!exam) { shell(emptyState('Examen introuvable', '', '#/exams', 'Mes EDN'), 'Entraînement'); return; }
+    renderTrainSetup(exam);
+  }
+
+  // Ordre des questions d'un examen.
+  // Les questions de LCA demandent d'avoir l'article sous les yeux : elles sont
+  // regroupées et renvoyées à la fin, après toutes les autres questions.
+  // lcaMode : 'last' (défaut) | 'exclude' | 'only'
+  // Détection d'une question de LCA — trois sources indépendantes, pour ne
+  // dépendre ni du nom du thème ni d'un filtre SQL :
+  //   1. le nom du thème/topic contient "LCA"
+  //   2. le contexte inscrit dans l'énoncé à l'import : "[Contexte LCA1] …"
+  //   3. l'énoncé mentionne explicitement une lecture critique d'article
+  function isLcaQuestion(questionText, themeName) {
+    // 1. le thème contient "LCA"
+    if (themeName && /LCA/i.test(themeName)) return true;
+    const head = String(questionText || '').slice(0, 400);
+    // 2. le contexte inscrit à l'import : "[Contexte LCA1] …"
+    if (/^\s*\[Contexte[^\]]*LCA/i.test(head)) return true;
+    // 3. la consigne qui ouvre toute LCA dans les corrigés EDN :
+    //    "Veuillez prendre connaissance de l'article intitulé …"
+    //    "Prenez connaissance de l'article intitulé …"
+    if (/(prendre|prenez)\s+connaissance\s+de\s+l['’\s]*article/i.test(head)) return true;
+    // 4. mention explicite d'une lecture critique d'article
+    if (/lecture critique d['’]article/i.test(head)) return true;
+    return false;
+  }
+
+  // Ordre des questions d'un examen : questions classiques d'abord (ordre
+  // d'origine), puis toutes les LCA (ordre d'origine, dossiers groupés).
+  // lcaMode : 'last' (défaut) | 'exclude' | 'only'
+  async function getOrderedQuestionIds(examId, lcaMode) {
+    // on charge l'énoncé : la détection ne dépend plus d'une requête filtrée
+    const { data: qs, error } = await sb.from('questions')
+      .select('id, topic_id, question_text').eq('exam_id', examId).order('position');
+    if (error) throw error;
+
+    const { data: topics } = await sb.from('topics').select('id, name').eq('exam_id', examId);
+    const topicName = new Map((topics || []).map(t => [t.id, t.name || '']));
+
+    const normal = [], lca = [];
+    const lcaThemes = new Set();
+    (qs || []).forEach(q => {
+      const theme = topicName.get(q.topic_id) || '';
+      if (isLcaQuestion(q.question_text, theme)) {
+        lca.push(q.id);
+        lcaThemes.add(theme || 'sans thème');
+      } else normal.push(q.id);
+    });
+
+    const diag = {
+      total: (qs || []).length,
+      lcaCount: lca.length,
+      normalCount: normal.length,
+      lcaThemes: [...lcaThemes],
+      allThemes: [...new Set((qs || []).map(q => topicName.get(q.topic_id) || 'sans thème'))]
+    };
+
+    if (lcaMode === 'exclude') return { ids: normal, diag };
+    if (lcaMode === 'only') return { ids: lca, diag };
+    return { ids: normal.concat(lca), diag };
+  }
+
+  // Encart "Continuer l'examen" affiché quand une session est en cours
+  function resumeCardHtml(exam, mode) {
+    const saved = readResume(exam.id, mode);
+    if (!saved || saved.cycleNumber !== exam.current_cycle || !saved.queue || saved.index >= saved.queue.length) return '';
+    const when = saved.savedAt ? new Date(saved.savedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '';
+    const pct = Math.round((saved.index / saved.queue.length) * 100);
+    const title = mode === 'errors' ? 'Reprendre la révision des erreurs'
+      : mode === 'lca' ? 'Reprendre la séance LCA' : "Continuer l'examen";
+    const SCOPE_LABEL = { all: 'toutes les questions', errors: 'mes erreurs',
+      fragile: 'questions fragiles', nonmastered: 'questions non maîtrisées' };
+    const filtre = mode === 'lca' ? 'LCA uniquement'
+      : (SCOPE_LABEL[saved.scope] || saved.scope) + (saved.lcaMode === 'exclude' ? ', sans les LCA' : '');
+    return `<section class="card mb" style="border-color:var(--accent);">
+      <div class="flex-between">
+        <div style="min-width:0;">
+          <h2>${title}</h2>
+          <div class="small">Reprendre à la question ${saved.index + 1} / ${saved.queue.length}${when ? ' · interrompue le ' + when : ''}</div>
+          <div class="small">Filtre : ${esc(filtre)}</div>
+          ${saved.lcaOrdered ? '' : '<div class="small" style="color:var(--accent-600);margin-top:4px;">Les LCA restantes seront replacées en fin de session</div>'}
+        </div>
+        <span class="badge badge-accent">${pct}%</span>
+      </div>
+      <div class="bar accent" style="margin:14px 0;"><i style="width:${pct}%"></i></div>
+      <div class="btn-row">
+        <button class="btn btn-accent btn-lg" data-resume="${mode}">Reprendre</button>
+        <button class="btn btn-sm" data-drop="${mode}">Abandonner</button>
+      </div>
+    </section>`;
+  }
+
+  // Une session enregistrée garde sa liste de questions figée. Si elle a été
+  // créée avant la règle "LCA en fin de session", on réordonne la PARTIE
+  // RESTANTE : les questions déjà répondues ne bougent pas, la progression et
+  // les réponses enregistrées sont intactes.
+  async function reorderPendingLCA(examId, saved) {
+    if (!saved || !Array.isArray(saved.queue)) return saved;
+    if (saved.lcaOrdered || saved.scope === 'errors' || saved.mode === 'lca') return saved;
+
+    const { ids: lcaIds } = await getOrderedQuestionIds(examId, 'only');
+    const lcaSet = new Set(lcaIds);
+    const index = saved.index || 0;
+    const done = saved.queue.slice(0, index);
+    const tail = saved.queue.slice(index);
+    const tailNormal = tail.filter(id => !lcaSet.has(id));
+    const tailLca = tail.filter(id => lcaSet.has(id));
+    const queue = done.concat(tailNormal, tailLca);
+
+    const updated = Object.assign({}, saved, { queue, lcaOrdered: true });
+    try { localStorage.setItem(RESUME_KEY(examId, saved.mode || 'exam'), JSON.stringify(updated)); } catch (e) {}
+    return updated;
+  }
+
+  function wireResume(exam) {
+    document.querySelectorAll('[data-resume]').forEach(btn => {
+      btn.onclick = async () => {
+        const mode = btn.dataset.resume;
+        let saved = readResume(exam.id, mode);
+        if (!saved) { renderTrainSetup(exam); return; }
+        btn.disabled = true; btn.textContent = 'Préparation…';
+        if (mode !== 'errors') saved = await reorderPendingLCA(exam.id, saved);
+        startSession(exam, saved.scope, saved.count, saved.queue, saved.index,
+          saved.sessionId, saved.correct || 0, saved.incorrect || 0, mode, saved.lcaMode);
+      };
+    });
+    document.querySelectorAll('[data-drop]').forEach(btn => {
+      btn.onclick = () => {
+        if (!confirm('Abandonner cette session en cours ?')) return;
+        try { localStorage.removeItem(RESUME_KEY(exam.id, btn.dataset.drop)); } catch (e) {}
+        location.hash.startsWith('#/exam/' + exam.id + '/mistakes') ? renderMistakes(exam.id) : renderTrainSetup(exam);
+      };
+    });
+  }
+
+  async function renderTrainSetup(exam) {
+    let diagHtml = '';
+    try {
+      const { diag } = await getOrderedQuestionIds(exam.id, 'last');
+      const ok = diag.lcaCount > 0;
+      diagHtml = `<div class="card card-tight small" style="border-color:${ok ? 'var(--good)' : 'var(--warn)'};">
+        <strong>Détection des LCA</strong><br/>
+        ${diag.lcaCount} question(s) de LCA sur ${diag.total}${diag.lcaCount ? ' — elles seront placées en fin de session' : ''}<br/>
+        ${diag.lcaCount ? 'Dossiers : ' + esc(diag.lcaThemes.join(', ')) :
+          'Aucune LCA détectée. Thèmes présents : ' + esc(diag.allThemes.slice(0, 12).join(', '))}
+      </div>`;
+    } catch (e) {
+      diagHtml = `<div class="card card-tight small" style="border-color:var(--bad);color:var(--bad);">
+        Détection des LCA impossible : ${esc(e.message || String(e))}</div>`;
+    }
+
+    shell(`
+      <h1>${esc(exam.name)}</h1>
+      <p class="subtitle">Cycle ${exam.current_cycle} · ${exam.total_questions} questions</p>
+      ${resumeCardHtml(exam, 'exam')}
+      ${resumeCardHtml(exam, 'lca')}
+      ${diagHtml}
+      <div class="card">
+        <h2>Nouvelle session</h2>
+        <label for="scope">Sur quoi travailler</label>
+        <select id="scope">
+          <option value="all">Toutes les questions</option>
+          <option value="errors">Uniquement mes erreurs du cycle</option>
+          <option value="fragile">Questions fragiles</option>
+          <option value="nonmastered">Questions non maîtrisées</option>
+        </select>
+        <label for="lca">Questions de LCA</label>
+        <select id="lca">
+          <option value="last" selected>À la fin de la session</option>
+          <option value="exclude">Les exclure</option>
+          <option value="only">Uniquement les LCA</option>
+        </select>
+
+        <label for="count">Nombre de questions</label>
+        <select id="count">
+          <option value="10">10 questions</option><option value="20">20 questions</option>
+          <option value="50">50 questions</option><option value="100">100 questions</option>
+          <option value="200">200 questions</option><option value="all" selected>Toutes</option>
+        </select>
+        <button class="btn btn-primary btn-lg btn-block mt" id="start-btn">Commencer l'entraînement</button>
+      </div>
+      <div class="btn-row mt">
+        <a class="btn" href="#/exam/${exam.id}/mistakes">Mes erreurs</a>
+        <a class="btn" href="#/exam/${exam.id}/exam-mode">Mode examen</a>
+        <a class="btn" href="#/exam/${exam.id}/stats">Statistiques</a>
+        <a class="btn btn-sm" href="#/diagnostic">Diagnostic LCA</a>
+      </div>
+    `, 'Entraînement');
+    wireResume(exam);
+    document.getElementById('start-btn').onclick = async () => {
+      const btn = document.getElementById('start-btn');
+      btn.disabled = true; btn.textContent = 'Préparation…';
+      const scope = document.getElementById('scope').value, count = document.getElementById('count').value;
+      // tri par position : les questions d'un même dossier progressif restent
+      // groupées et dans leur ordre d'origine
+      const allIds = (await sb.from('questions').select('id')
+        .eq('exam_id', exam.id).order('position')).data.map(q => q.id);
+      const latest = await EDNEngine.getLatestAttemptsForCycle(CURRENT_USER.id, exam.id, exam.current_cycle);
+      const masteryMap = await EDNEngine.getMasteryMap(CURRENT_USER.id, exam.id);
+      const queue = EDNEngine.buildQuestionSet(allIds, scope, latest, masteryMap, count);
+      const sessionMode = lcaMode === 'only' ? 'lca' : 'exam';
+      if (!queue.length) {
+        btn.disabled = false; btn.textContent = "Commencer l'entraînement";
+        alert('Aucune question ne correspond à cette sélection.'); return;
+      }
+      const { data: session } = await sb.from('study_sessions').insert({
+        user_id: CURRENT_USER.id, exam_id: exam.id, cycle_number: exam.current_cycle,
+        mode: 'entrainement', total_questions: queue.length
+      }).select().single();
+      startSession(exam, scope, count, queue, 0, session.id, 0, 0, sessionMode, lcaMode);
+    };
+  }
+
+  // Normalisation pour comparer une réponse libre (QROC) aux réponses acceptées
+  function normAnswer(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  const SINGLE_TYPES = ['qru', 'qcm', 'qtcs'];
+
+  async function startSession(exam, scope, count, queue, index, sessionId, correct, incorrect, mode, lcaMode) {
+    mode = mode || (scope === 'errors' ? 'errors' : 'exam');
+    if (index >= queue.length) { await finishSession(exam, sessionId, correct, incorrect, mode); return; }
+    // position sauvegardée à chaque question : fermer Safari ne perd rien
+    try {
+      localStorage.setItem(RESUME_KEY(exam.id, mode), JSON.stringify({
+        cycleNumber: exam.current_cycle, mode, scope, count, lcaMode: lcaMode || (mode === 'lca' ? 'only' : 'last'),
+        queue, index, sessionId, correct, incorrect, lcaOrdered: true, savedAt: Date.now()
+      }));
+    } catch (e) { /* stockage plein ou navigation privée : la session continue */ }
+
+    const qId = queue[index];
+    const { data: q } = await sb.from('questions').select('*, question_options(*)').eq('id', qId).single();
+    const type = (q.question_type || 'qrm').toLowerCase();
+    const isOpen = type === 'qroc';
+    const isZone = type === 'qzone';
+    const isSingle = SINGLE_TYPES.includes(type);
+    const opts = (q.question_options || []).sort((a, b) => a.position - b.position);
+    const correctKeys = opts.filter(o => o.is_correct).map(o => o.option_key).sort();
+    const startTime = Date.now();
+
+    const typeLabel = isOpen ? 'Réponse libre' : isZone ? 'Question sur image'
+      : isSingle ? 'Une seule réponse' : 'Plusieurs réponses possibles';
+
+    // Question de LCA : rappel qu'il faut l'article sous les yeux
+    const lcaBanner = isLcaQuestion(q.question_text, q.theme)
+      ? `<div class="q-context" style="border-left-color:var(--accent);">
+          <strong>Lecture critique d'article${q.theme ? ' — ' + esc(q.theme) : ''}</strong><br/>
+          Gardez l'article sous les yeux pour répondre.</div>` : '';
+
+    // Dossier progressif : position de la question dans son dossier.
+    // Les questions d'un même dossier partagent le même topic_id et se suivent
+    // par leur position d'origine dans le document.
+    let dpBanner = '';
+    if (q.topic_id && /DP\s*\d/i.test(q.theme || '')) {
+      const { data: sibs } = await sb.from('questions')
+        .select('id, position').eq('topic_id', q.topic_id).order('position');
+      if (sibs && sibs.length > 1) {
+        const rank = sibs.findIndex(x => x.id === q.id) + 1;
+        if (rank > 0) {
+          dpBanner = `<div class="q-type" style="background:var(--accent-100);color:var(--accent-600);">
+            Dossier progressif ${esc(q.theme)} · question ${rank} / ${sibs.length}</div>`;
+        }
+      }
+    }
+
+    const images = Array.isArray(q.images) ? q.images : [];
+    const imgTag = (im) => `<img src="${im.src}" alt="Illustration de la question" class="q-image" loading="lazy" />`;
+    const mainImages = images.filter(im => !im.label).map(imgTag).join('');
+    const imagesByOption = {};
+    images.filter(im => im.label).forEach(im => {
+      imagesByOption[im.label] = (imagesByOption[im.label] || '') + imgTag(im);
+    });
+
+    // L'énoncé peut contenir un contexte de dossier : on le met en retrait
+    const parts = String(q.question_text || '').split('\n\n');
+    const hasContext = parts.length > 1 && /^\[Contexte/.test(parts[0]);
+    const contextHtml = hasContext
+      ? `<div class="q-context">${esc(parts[0].replace(/^\[Contexte\s*[^\]]*\]\s*/, ''))}</div>` : '';
+    const statementHtml = esc(hasContext ? parts.slice(1).join('\n\n') : q.question_text);
+
+    let answerZone;
+    if (isOpen) {
+      answerZone = `<input type="text" id="open-answer" placeholder="Votre réponse"
+        autocomplete="off" autocapitalize="off" autocorrect="off" aria-label="Votre réponse" />`;
+    } else if (isZone || !opts.length) {
+      answerZone = `<p class="small">Répondez mentalement sur l'image, puis indiquez si vous maîtrisiez la question.</p>`;
+    } else {
+      answerZone = opts.map(o => `
+        <label class="option" data-key="${o.option_key}">
+          <input type="${isSingle ? 'radio' : 'checkbox'}" name="opt" value="${o.option_key}" />
+          <span class="key" aria-hidden="true">${o.option_key}</span>
+          <span class="body">${esc(o.option_text)}${imagesByOption[o.option_key] || ''}</span>
+        </label>`).join('');
+    }
+
+    const actionButtons = (isZone || (!isOpen && !opts.length))
+      ? `<button class="btn btn-good btn-lg" id="self-ok">Je la maîtrisais</button>
+         <button class="btn btn-lg" id="self-ko">Je ne la savais pas</button>`
+      : `<button class="btn btn-primary btn-lg" id="validate-btn">Valider</button>`;
+
+    const pct = Math.round((index / queue.length) * 100);
+
+    shell(`
+      <div class="question-shell">
+        <div class="q-progress">
+          <div class="row">
+            <span>Question <b>${index + 1}</b> / ${queue.length}</span>
+            <span>Cycle ${exam.current_cycle}</span>
+          </div>
+          <div class="bar"><i style="width:${pct}%"></i></div>
+        </div>
+
+        ${dpBanner}${lcaBanner}
+        <span class="q-type">${typeLabel}${!dpBanner && q.theme ? ' · ' + esc(q.theme) : ''}</span>
+        ${contextHtml}
+        <div class="q-text">${statementHtml}</div>
+        ${mainImages}
+        <div id="options">${answerZone}</div>
+        <div id="feedback-zone"></div>
+
+        <div class="actionbar">
+          <button class="btn btn-ghost" id="quit-btn">Quitter</button>
+          ${actionButtons}
+        </div>
+      </div>
+    `, 'Entraînement');
+
+    // sélection visuelle des propositions
+    document.querySelectorAll('.option').forEach(el => {
+      const input = el.querySelector('input');
+      if (!input) return;
+      input.addEventListener('change', () => {
+        if (isSingle) document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        el.classList.toggle('selected', input.checked);
+      });
+    });
+
+    document.getElementById('quit-btn').onclick = () => { location.hash = `#/exam/${exam.id}/train`; renderTrainSetup(exam); };
+
+    async function reveal(isCorrect, selected) {
+      const responseTime = Math.round((Date.now() - startTime) / 1000);
+      document.querySelectorAll('.option').forEach(el => {
+        el.classList.add('disabled');
+        const input = el.querySelector('input'); if (input) input.disabled = true;
+        const key = el.dataset.key;
+        if (correctKeys.includes(key)) el.classList.add('correct');
+        else if (selected.includes(key)) el.classList.add('incorrect');
+      });
+      const openInput = document.getElementById('open-answer');
+      if (openInput) openInput.disabled = true;
+
+      await EDNEngine.recordAttempt({
+        userId: CURRENT_USER.id, examId: exam.id, questionId: q.id, sessionId, cycleNumber: exam.current_cycle,
+        selectedAnswers: selected, isCorrect, responseTime
+      });
+
+      const goodAnswers = opts.filter(o => o.is_correct)
+        .map(o => isOpen ? esc(o.option_text) : '<strong>' + o.option_key + '.</strong> ' + esc(o.option_text));
+
+      document.getElementById('feedback-zone').innerHTML = `
+        <div class="verdict ${isCorrect ? 'good' : 'bad'}" role="status">
+          <span class="mark"><span>${isCorrect ? '✓' : '✕'}</span></span>
+          ${isCorrect ? 'Bonne réponse' : 'Mauvaise réponse'}
+        </div>
+        ${goodAnswers.length ? `<div class="explain">
+          <h4>${isOpen ? 'Réponses acceptées' : 'Bonne(s) réponse(s)'}</h4>
+          <p>${goodAnswers.join(isOpen ? ' · ' : '<br/>')}</p></div>` : ''}
+        ${q.official_correction ? `<div class="explain"><h4>Correction officielle</h4><p>${esc(q.official_correction)}</p></div>` : ''}
+        ${q.explanation ? `<div class="explain"><h4>Explication</h4><p>${esc(q.explanation)}</p></div>` : ''}
+      `;
+      ['validate-btn', 'self-ok', 'self-ko'].forEach(id => {
+        const b = document.getElementById(id); if (b) b.style.display = 'none';
+      });
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn btn-primary btn-lg btn-block mt';
+      nextBtn.textContent = index + 1 < queue.length ? 'Question suivante' : 'Terminer la session';
+      nextBtn.onclick = () => startSession(exam, scope, count, queue, index + 1, sessionId,
+        correct + (isCorrect ? 1 : 0), incorrect + (isCorrect ? 0 : 1), mode, lcaMode);
+      document.getElementById('feedback-zone').appendChild(nextBtn);
+    }
+
+    const selfOk = document.getElementById('self-ok');
+    if (selfOk) {
+      selfOk.onclick = () => reveal(true, []);
+      document.getElementById('self-ko').onclick = () => reveal(false, []);
+    }
+
+    const validateBtn = document.getElementById('validate-btn');
+    if (validateBtn) {
+      validateBtn.onclick = () => {
+        if (isOpen) {
+          const typed = document.getElementById('open-answer').value.trim();
+          if (!typed) { alert('Écrivez votre réponse.'); return; }
+          const isCorrect = opts.some(o => normAnswer(o.option_text) === normAnswer(typed));
+          reveal(isCorrect, [typed]);
+          return;
+        }
+        const selected = Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(i => i.value);
+        if (!selected.length) { alert('Sélectionnez au moins une réponse.'); return; }
+        // QRU / TCS : une seule réponse, correcte si elle fait partie des réponses valides.
+        // QRM / QRP : la sélection doit correspondre exactement aux réponses valides.
+        const isCorrect = isSingle
+          ? correctKeys.includes(selected[0])
+          : JSON.stringify(selected.slice().sort()) === JSON.stringify(correctKeys);
+        reveal(isCorrect, selected);
+      };
+      const openInput = document.getElementById('open-answer');
+      if (openInput) {
+        openInput.addEventListener('keydown', e => { if (e.key === 'Enter') validateBtn.click(); });
+        openInput.focus();
+      }
+    }
+  }
+
+  async function finishSession(exam, sessionId, correct, incorrect, mode) {
+    try { localStorage.removeItem(RESUME_KEY(exam.id, mode || 'exam')); } catch (e) {}
+    await sb.from('study_sessions').update({
+      correct_answers: correct, incorrect_answers: incorrect, completed_at: new Date().toISOString()
+    }).eq('id', sessionId);
+
+    const remainingErrors = await EDNEngine.countCurrentErrors(CURRENT_USER.id, exam.id, exam.current_cycle);
+
+    if (remainingErrors === 0) {
+      await sb.from('exams').update({ current_cycle: exam.current_cycle + 1, updated_at: new Date().toISOString() }).eq('id', exam.id);
+      shell(`
+        <div class="card center" style="padding:40px 24px;">
+          ${ring(100, 104, 10, 'var(--good)', 'var(--good-100)')}
+          <h1 style="margin-top:20px;">Cycle ${exam.current_cycle} terminé</h1>
+          <p class="subtitle">Zéro erreur restante. Vous pouvez relancer un cycle complet.</p>
+          <a class="btn btn-primary btn-lg btn-block" href="#/exam/${exam.id}/train">Commencer le cycle ${exam.current_cycle + 1}</a>
+          <a class="btn btn-block mt" href="#/dashboard">Retour à l'accueil</a>
+        </div>`, 'Cycle terminé');
+    } else {
+      const total = correct + incorrect;
+      const score = total ? Math.round(correct / total * 100) : 0;
+      shell(`
+        <div class="card center" style="padding:36px 24px;">
+          ${ring(score, 104, 10, 'var(--brand)', 'var(--brand-100)')}
+          <h1 style="margin-top:20px;">Session terminée</h1>
+          <p class="subtitle">${correct} bonne${correct > 1 ? 's' : ''} réponse${correct > 1 ? 's' : ''}, ${incorrect} erreur${incorrect > 1 ? 's' : ''}.</p>
+        </div>
+        <div class="card stat accent center">
+          <div class="label">Il reste à revoir</div>
+          <div class="value">${remainingErrors}</div>
+        </div>
+        <div class="btn-row mt">
+          <a class="btn btn-primary btn-lg" href="#/exam/${exam.id}/mistakes">Réviser mes erreurs</a>
+          <a class="btn btn-lg" href="#/dashboard">Accueil</a>
+        </div>`, 'Session terminée');
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // MES ERREURS
+  // ---------------------------------------------------------------
+  async function renderMistakes(examId) {
+    shell(skeleton(2), 'Mes erreurs');
+    const { data: exam } = await sb.from('exams').select('*').eq('id', examId).single();
+    if (!exam) { shell(emptyState('Examen introuvable', 'Il a peut-être été supprimé.', '#/exams', 'Mes EDN'), 'Mes erreurs'); return; }
+
+    const { ids: allIds } = await getOrderedQuestionIds(examId, 'last');
+    const latest = await EDNEngine.getLatestAttemptsForCycle(CURRENT_USER.id, examId, exam.current_cycle);
+    const errorIds = allIds.filter(id => latest.has(id) && latest.get(id) === false);
+    const masteryMap = await EDNEngine.getMasteryMap(CURRENT_USER.id, examId);
+
+    if (!errorIds.length) {
+      shell(`<h1>Mes erreurs</h1><p class="subtitle">${esc(exam.name)} · cycle ${exam.current_cycle}</p>
+        ${emptyState('Aucune erreur en attente',
+          'Toutes les questions déjà vues dans ce cycle sont justes. Continuez l\'entraînement pour terminer le cycle.',
+          `#/exam/${examId}/train`, 'Continuer l\'entraînement', 'target')}`, 'Mes erreurs');
+      return;
+    }
+
+    // aperçu des questions en erreur (les 20 premières, pour rester léger sur mobile)
+    const preview = errorIds.slice(0, 20);
+    const { data: qs } = await sb.from('questions')
+      .select('id, question_number, question_text, topic_id').in('id', preview);
+    const byId = new Map((qs || []).map(q => [q.id, q]));
+
+    shell(`
+      <h1>Mes erreurs</h1>
+      <p class="subtitle">${esc(exam.name)} · cycle ${exam.current_cycle}</p>
+
+      ${resumeCardHtml(exam, 'errors')}
+      <section class="card stat accent center mb" style="padding:28px;">
+        <div class="label">Questions à revoir</div>
+        <div class="value" style="font-size:2.6rem;">${errorIds.length}</div>
+      </section>
+      <button class="btn btn-primary btn-lg btn-block mb" id="review-btn">Réviser mes erreurs (nouvelle session)</button>
+
+      <h2 class="mb">Aperçu</h2>
+      ${preview.map(id => {
+        const q = byId.get(id); if (!q) return '';
+        const m = masteryMap.get(id) || {};
+        const st = m.status || 'a_apprendre';
+        const txt = String(q.question_text || '').split('\n\n').pop();
+        return `<a class="card card-tight" href="#/question/${q.id}" style="display:block;">
+          <div class="flex-between" style="align-items:flex-start;">
+            <div class="small" style="font-family:var(--font-mono);">Q${q.question_number ?? '?'}</div>
+            <span class="badge badge-${st}">${STATUS_LABEL[st] || st}</span>
+          </div>
+          <p style="margin:8px 0 6px;font-size:.94rem;color:var(--ink);">${esc(txt.slice(0, 150))}${txt.length > 150 ? '…' : ''}</p>
+          <div class="small">${m.total_incorrect || 0} erreur(s) · ${m.total_attempts || 0} tentative(s) · voir le détail</div>
+        </a>`;
+      }).join('')}
+      ${errorIds.length > preview.length ? `<p class="small center mt">+ ${errorIds.length - preview.length} autres questions dans la session</p>` : ''}
+    `, 'Mes erreurs');
+
+    wireResume(exam);
+    document.getElementById('review-btn').onclick = async (e) => {
+      e.preventDefault();
+      const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Préparation…';
+      const { data: session } = await sb.from('study_sessions').insert({
+        user_id: CURRENT_USER.id, exam_id: examId, cycle_number: exam.current_cycle,
+        mode: 'erreurs', total_questions: errorIds.length
+      }).select().single();
+      startSession(exam, 'errors', 'all', errorIds, 0, session.id, 0, 0, 'errors');
+    };
+  }
+
+  // ---------------------------------------------------------------
+  // STATISTIQUES (par thème)
+  // ---------------------------------------------------------------
+  async function renderStats(examId) {
+    shell(skeleton(3), 'Statistiques');
+    const { data: exam } = await sb.from('exams').select('*').eq('id', examId).single();
+    if (!exam) { shell(emptyState('Examen introuvable', '', '#/exams', 'Mes EDN'), 'Statistiques'); return; }
+
+    const masteryMap = await EDNEngine.getMasteryMap(CURRENT_USER.id, examId);
+    const counts = { maitrisee: 0, en_cours: 0, fragile: 0, a_apprendre: 0 };
+    masteryMap.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
+    const seen = counts.maitrisee + counts.en_cours + counts.fragile + counts.a_apprendre;
+    const untouched = Math.max(0, exam.total_questions - seen);
+
+    const { data: attempts } = await sb.from('attempts')
+      .select('is_correct, answered_at').eq('exam_id', examId).eq('user_id', CURRENT_USER.id)
+      .order('answered_at');
+    const total = (attempts || []).length;
+    const rate = total ? Math.round(attempts.filter(a => a.is_correct).length / total * 100) : 0;
+
+    // évolution : taux de réussite par jour d'activité (données réelles)
+    const perDay = new Map();
+    (attempts || []).forEach(a => {
+      const d = new Date(a.answered_at).toISOString().slice(0, 10);
+      if (!perDay.has(d)) perDay.set(d, { ok: 0, n: 0 });
+      const e = perDay.get(d); e.n++; if (a.is_correct) e.ok++;
+    });
+    const days = [...perDay.entries()].slice(-14);
+
+    // courbe SVG responsive (viewBox, aucune largeur fixe)
+    let chart = '';
+    if (days.length >= 2) {
+      const W = 300, H = 90, pad = 6;
+      const pts = days.map(([, v], i) => {
+        const x = pad + (i * (W - pad * 2)) / (days.length - 1);
+        const y = H - pad - ((v.ok / v.n) * (H - pad * 2));
+        return [x, y];
+      });
+      const line = pts.map((pt, i) => (i ? 'L' : 'M') + pt[0].toFixed(1) + ' ' + pt[1].toFixed(1)).join(' ');
+      const area = line + ` L${pts[pts.length - 1][0].toFixed(1)} ${H} L${pts[0][0].toFixed(1)} ${H} Z`;
+      chart = `<div class="card mb">
+        <h2>Évolution du taux de réussite</h2>
+        <p class="small">${days.length} derniers jours d'activité</p>
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" width="100%" height="110" role="img"
+             aria-label="Évolution du taux de réussite">
+          <path d="${area}" fill="var(--brand-50)"/>
+          <path d="${line}" fill="none" stroke="var(--brand)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <div class="flex-between small"><span>${days[0][0].slice(8) + '/' + days[0][0].slice(5, 7)}</span>
+          <span>${days[days.length - 1][0].slice(8) + '/' + days[days.length - 1][0].slice(5, 7)}</span></div>
+      </div>`;
+    }
+
+    // répartition des questions (barre empilée)
+    const segs = [
+      { n: counts.maitrisee, c: 'var(--good)', label: 'Maîtrisées' },
+      { n: counts.en_cours, c: 'var(--brand)', label: 'En cours' },
+      { n: counts.fragile, c: 'var(--warn)', label: 'Fragiles' },
+      { n: counts.a_apprendre, c: 'var(--bad)', label: 'À apprendre' },
+      { n: untouched, c: 'var(--idle)', label: 'Non travaillées' }
+    ].filter(x => x.n > 0);
+    const segTotal = segs.reduce((n, x) => n + x.n, 0) || 1;
+
+    // performances par thème
+    const { data: topics } = await sb.from('topics').select('id, name').eq('exam_id', examId);
+    const rows = [];
+    for (const t of (topics || [])) {
+      const { data: qs } = await sb.from('questions').select('id').eq('topic_id', t.id);
+      const qIds = (qs || []).map(q => q.id);
+      if (!qIds.length) continue;
+      const { data: att } = await sb.from('attempts').select('is_correct')
+        .eq('exam_id', examId).eq('user_id', CURRENT_USER.id).in('question_id', qIds);
+      rows.push({
+        name: t.name, n: (att || []).length,
+        rate: (att || []).length ? Math.round(att.filter(a => a.is_correct).length / att.length * 100) : null
+      });
+    }
+    rows.sort((a, b) => (a.rate === null) - (b.rate === null) || (a.rate - b.rate));
+
+    const mastPct = exam.total_questions ? Math.round(counts.maitrisee / exam.total_questions * 100) : 0;
+
+    shell(`
+      <h1>Statistiques</h1>
+      <p class="subtitle">${esc(exam.name)} · cycle ${exam.current_cycle}</p>
+
+      <section class="card mb" style="display:flex;align-items:center;gap:20px;">
+        ${ring(mastPct, 96, 10, 'var(--brand)', 'var(--brand-100)')}
+        <div style="min-width:0;">
+          <h2>Maîtrise</h2>
+          <p class="small" style="margin:0;">${counts.maitrisee} question${counts.maitrisee > 1 ? 's' : ''} maîtrisée${counts.maitrisee > 1 ? 's' : ''} sur ${exam.total_questions}</p>
+        </div>
+      </section>
+
+      <div class="grid grid-2 mb">
+        <div class="card stat"><div class="label">Réponses</div><div class="value">${total}</div></div>
+        <div class="card stat"><div class="label">Réussite</div><div class="value">${rate}<small>%</small></div></div>
+        <div class="card stat"><div class="label">Fragiles</div><div class="value">${counts.fragile}</div></div>
+        <div class="card stat"><div class="label">Non vues</div><div class="value">${untouched}</div></div>
+      </div>
+
+      ${chart}
+
+      <div class="card mb">
+        <h2>Répartition des questions</h2>
+        <div style="display:flex;height:14px;border-radius:999px;overflow:hidden;margin:14px 0 4px;">
+          ${segs.map(x => `<i style="width:${(x.n / segTotal * 100).toFixed(1)}%;background:${x.c};display:block;"></i>`).join('')}
+        </div>
+        <div class="legend">
+          ${segs.map(x => `<span><i style="background:${x.c}"></i>${x.label} · ${x.n}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Par thème</h2>
+        <p class="small">Calculé à partir de vos réponses, sans aucune estimation.</p>
+        <div style="margin-top:16px;">
+        ${rows.length ? rows.map(r => `
+          <div class="hbar">
+            <div class="top"><span class="name">${esc(r.name)}</span>
+              <b>${r.rate === null ? '—' : r.rate + '%'}</b></div>
+            <div class="bar ${r.rate === null ? '' : r.rate >= 70 ? 'good' : 'accent'}">
+              <i style="width:${r.rate || 0}%"></i></div>
+            <div class="small" style="margin-top:4px;">${r.n} réponse${r.n > 1 ? 's' : ''}</div>
+          </div>`).join('') : '<p class="small">Aucun thème identifié dans cet import.</p>'}
+        </div>
+      </div>
+
+      <a class="btn btn-block mt" href="#/exam/${examId}/train">Retour à l'entraînement</a>
+    `, 'Statistiques');
+  }
+
+  // ---------------------------------------------------------------
+  // MODE EXAMEN (chronométré, sans correction immédiate)
+  // ---------------------------------------------------------------
+  async function renderExamModeSetup(examId) {
+    shell(skeleton(2));
+    const { data: exam } = await sb.from('exams').select('*').eq('id', examId).single();
+    shell(`
+      <h1>Mode examen</h1>
+      <p class="subtitle">${esc(exam.name)} — sans correction immédiate</p>
+      <div class="card">
+        <label>Nombre de questions</label>
+        <select id="ex-count"><option>10</option><option>20</option><option>50</option><option selected>100</option><option value="all">Toutes</option></select>
+        <label>Durée (minutes, 0 = illimité)</label>
+        <input type="number" id="ex-duration" value="0" />
+        <button class="btn btn-primary btn-lg btn-block mt" id="ex-start">Démarrer le mode examen</button>
+      </div>
+    `, 'Mode examen');
+    document.getElementById('ex-start').onclick = async () => {
+      const count = document.getElementById('ex-count').value;
+      const duration = Number(document.getElementById('ex-duration').value) || 0;
+      // ordre d'origine : dossiers progressifs groupés, LCA en fin d'épreuve
+      const { ids: all } = await getOrderedQuestionIds(examId, 'last');
+      let ids = all;
+      if (count !== 'all') ids = ids.slice(0, Number(count));
+      const { data: session } = await sb.from('study_sessions').insert({
+        user_id: CURRENT_USER.id, exam_id: examId, cycle_number: exam.current_cycle, mode: 'examen', total_questions: ids.length
+      }).select().single();
+      runExamMode(exam, ids, 0, {}, session.id, duration, Date.now());
+    };
+  }
+
+  async function runExamMode(exam, ids, index, answers, sessionId, durationMin, startedAt) {
+    if (index >= ids.length) { finishExamMode(exam, ids, answers, sessionId); return; }
+    const { data: q } = await sb.from('questions').select('*, question_options(*)').eq('id', ids[index]).single();
+    const isMultiple = q.question_type === 'qcm_multiple';
+    const remainingMs = durationMin ? durationMin * 60000 - (Date.now() - startedAt) : null;
+
+    const exImages = Array.isArray(q.images) ? q.images : [];
+    const pctEx = Math.round((index / ids.length) * 100);
+    shell(`
+      <div class="question-shell">
+        <div class="q-progress">
+          <div class="row">
+            <span>Question <b>${index + 1}</b> / ${ids.length}</span>
+            ${durationMin ? `<span id="timer" style="font-family:var(--font-mono);color:var(--accent-600);">--:--</span>` : '<span>Mode examen</span>'}
+          </div>
+          <div class="bar accent"><i style="width:${pctEx}%"></i></div>
+        </div>
+        <div class="q-text">${esc(q.question_text)}</div>
+        ${exImages.filter(im => !im.label).map(im => `<img src="${im.src}" class="q-image" alt="Illustration" loading="lazy"/>`).join('')}
+        <div id="options">
+          ${q.question_options.sort((a, b) => a.position - b.position).map(o => `
+            <label class="option${(answers[q.id] || []).includes(o.option_key) ? ' selected' : ''}" data-key="${o.option_key}">
+              <input type="${isMultiple ? 'checkbox' : 'radio'}" name="opt" value="${o.option_key}" ${(answers[q.id] || []).includes(o.option_key) ? 'checked' : ''} />
+              <span class="key" aria-hidden="true">${o.option_key}</span>
+              <span class="body">${esc(o.option_text)}${exImages.filter(im => im.label === o.option_key).map(im => `<img src="${im.src}" class="q-image" alt="Illustration" loading="lazy"/>`).join('')}</span>
+            </label>`).join('')}
+        </div>
+        <div class="actionbar">
+          <button class="btn" id="prev-btn" ${index === 0 ? 'disabled' : ''}>Précédent</button>
+          <button class="btn btn-primary" id="next-btn">${index + 1 < ids.length ? 'Suivant' : 'Terminer'}</button>
+        </div>
+      </div>
+    `, 'Mode examen');
+    document.querySelectorAll('.option').forEach(el => {
+      const input = el.querySelector('input');
+      input.addEventListener('change', () => {
+        if (!isMultiple) document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        el.classList.toggle('selected', input.checked);
+      });
+    });
+    function collect() {
+      answers[q.id] = Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(i => i.value);
+    }
+    document.getElementById('prev-btn').onclick = () => { collect(); runExamMode(exam, ids, index - 1, answers, sessionId, durationMin, startedAt); };
+    document.getElementById('next-btn').onclick = () => { collect(); runExamMode(exam, ids, index + 1, answers, sessionId, durationMin, startedAt); };
+
+    if (durationMin) {
+      const timerEl = document.getElementById('timer');
+      const tick = () => {
+        const left = durationMin * 60000 - (Date.now() - startedAt);
+        if (left <= 0) { collect(); finishExamMode(exam, ids, answers, sessionId); return; }
+        const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+        timerEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
+        window._examTimer = setTimeout(tick, 1000);
+      };
+      clearTimeout(window._examTimer);
+      tick();
+    }
+  }
+
+  async function finishExamMode(exam, ids, answers, sessionId) {
+    clearTimeout(window._examTimer);
+    let correct = 0;
+    const results = [];
+    for (const qId of ids) {
+      const { data: q } = await sb.from('questions').select('*, question_options(*)').eq('id', qId).single();
+      const correctKeys = q.question_options.filter(o => o.is_correct).map(o => o.option_key).sort();
+      const selected = (answers[qId] || []).sort();
+      const isCorrect = JSON.stringify(selected) === JSON.stringify(correctKeys);
+      if (isCorrect) correct++;
+      await EDNEngine.recordAttempt({
+        userId: CURRENT_USER.id, examId: exam.id, questionId: qId, sessionId, cycleNumber: exam.current_cycle,
+        selectedAnswers: selected, isCorrect
+      });
+      results.push({ q, isCorrect, selected, correctKeys });
+    }
+    await sb.from('study_sessions').update({ correct_answers: correct, incorrect_answers: ids.length - correct, completed_at: new Date().toISOString() }).eq('id', sessionId);
+    const score = Math.round((correct / ids.length) * 100);
+    shell(`
+      <div class="card center" style="padding:36px 24px;">
+        ${ring(score, 112, 11, score >= 50 ? 'var(--good)' : 'var(--accent)', 'var(--idle-100)')}
+        <h1 style="margin-top:20px;">Score : ${score}%</h1>
+        <p class="subtitle">${correct} bonne${correct > 1 ? 's' : ''} réponse${correct > 1 ? 's' : ''} · ${ids.length - correct} erreur${(ids.length - correct) > 1 ? 's' : ''}</p>
+      </div>
+      <div class="btn-row mt">
+        <a class="btn btn-primary btn-lg" href="#/exam/${exam.id}/mistakes">Voir mes erreurs</a>
+        <a class="btn btn-lg" href="#/dashboard">Accueil</a>
+      </div>
+    `, 'Résultat');
+  }
+
+  // ---------------------------------------------------------------
+  // ROUTER
+  // ---------------------------------------------------------------
+  async function route() {
+    const { data: { session } } = await sb.auth.getSession();
+    CURRENT_USER = session ? session.user : null;
+    const hash = location.hash || '#/dashboard';
+
+    if (!CURRENT_USER) { renderLogin(); return; }
+    if (hash === '#/' || hash === '') { location.hash = '#/dashboard'; return; }
+
+    let m;
+    if (hash.startsWith('#/dashboard')) return renderDashboard();
+    if (hash.startsWith('#/exams')) return renderExams();
+    if (hash.startsWith('#/revise')) return renderRevise();
+    if (hash.startsWith('#/diagnostic')) return renderDiagnostic();
+    if (hash.startsWith('#/list/mastered')) return renderQuestionList('mastered');
+    if (hash.startsWith('#/list/review')) return renderQuestionList('review');
+    if ((m = hash.match(/^#\/question\/([^/]+)/))) return renderQuestionDetail(m[1]);
+    if (hash.startsWith('#/stats')) return renderStatsHub();
+    if (hash === '#/import') return renderImport();
+    if (hash === '#/import/verify') return renderImportVerify();
+    if ((m = hash.match(/^#\/exam\/([^/]+)\/train/))) return renderTrain(m[1]);
+    if ((m = hash.match(/^#\/exam\/([^/]+)\/mistakes/))) return renderMistakes(m[1]);
+    if ((m = hash.match(/^#\/exam\/([^/]+)\/stats/))) return renderStats(m[1]);
+    if ((m = hash.match(/^#\/exam\/([^/]+)\/exam-mode/))) return renderExamModeSetup(m[1]);
+    renderDashboard();
+  }
+
+  function init() {
+    window.addEventListener('hashchange', route);
+    sb.auth.onAuthStateChange(() => route());
+    route();
+  }
+
+  return { init };
+})();
+
+document.addEventListener('DOMContentLoaded', function () { if (window.EDN_BOOT()) App.init(); });
+
+</script>
+</body>
+</html>
